@@ -5,6 +5,7 @@ import Calculator from './Calculator';
 const defaults: GameManagerParams = {
     tickRate: 64,
     gameWorld: document.body,
+    showStats: false,
 };
 
 declare global {
@@ -16,12 +17,15 @@ declare global {
 export interface GameManagerParams {
     tickRate?: number;
     gameWorld: HTMLElement;
+    showStats: boolean;
 }
 
 export default class GameManager {
     entities: Array<GameEntity>;
     tickRate: number;
+    tickDuration: number;
     gameWorld: HTMLElement;
+    showStats: boolean;
 
     constructor(params?: GameManagerParams) {
         if (!params) {
@@ -29,26 +33,42 @@ export default class GameManager {
         }
 
         this.tickRate = params.tickRate || defaults.tickRate;
+        this.tickDuration = 1 / this.tickRate;
         this.gameWorld = params.gameWorld || defaults.gameWorld;
+        this.showStats = params.showStats || defaults.showStats;
         this.entities = [];
         InitBoundaries();
-        InitPerformanceStats();
+        if (this.showStats) {
+            InitPerformanceStats();
+        }
         new Calculator();
         window.GameManager = this;
     }
 
     startGame(): void {
-        setInterval(() => {
-            this.handleGameTick();
-        }, 1000 / this.tickRate);
+        if (this.showStats) {
+            setInterval(() => {
+                this.handleGameTickWithStats();
+            }, 1000 / this.tickRate);
+        } else {
+            setInterval(() => {
+                this.handleGameTick();
+            }, 1000 / this.tickRate);
+        }
     }
 
-    handleGameTick(): void {
+    handleGameTickWithStats(): void {
         PerformanceStats.begin();
         this.entities.forEach(entity => {
             entity.tick();
         });
         PerformanceStats.end();
+    }
+
+    handleGameTick(): void {
+        this.entities.forEach(entity => {
+            entity.tick();
+        });
     }
 
     addGameEntity(entity: GameEntity): number {

@@ -4,6 +4,7 @@ import './PlayerProjectile';
 import { Vector2 } from '../game-engine/game-object-types/Vector2';
 import { LitEntity } from '../game-engine/game-entities/LitEntity';
 import VectorMath from '../game-engine/math/VectorMath';
+import { getXBoundary, getYBoundary } from '../game-engine/Boundaries';
 
 const controlKeys = ['w', 'a', 's', 'd'];
 
@@ -31,12 +32,16 @@ class Player extends LitEntity {
         return css`
             :host {
                 position: absolute;
+                top: 0;
+                left: 0;
 
                 display: block;
                 width: 5px;
                 height: 5px;
                 background: red;
                 border-radius: 5px;
+
+                will-change: transform;
             }
         `;
     }
@@ -53,8 +58,7 @@ class Player extends LitEntity {
 
         this.position.x = window.innerWidth / 2;
         this.position.y = window.innerHeight / 2;
-        this.style.top = `${this.position.x}px`;
-        this.style.left = `${this.position.y}px`;
+        this.style.transform = `translate(${this.position.x}px, ${this.position.y}px)`;
 
         document.addEventListener('keydown', (e: KeyboardEvent) => {
             this.handleControl(e.key);
@@ -64,15 +68,19 @@ class Player extends LitEntity {
                 this.movementDirections = this.movementDirections.filter(key => key !== e.key);
             }
         });
-        document.addEventListener('click', (e: MouseEvent) => {
-            window.Calculator.calculateHeading(this.position, new Vector2(e.x, e.y), this.entityId).then(heading =>
-                this.spawnProjectile(heading),
-            );
+        document.addEventListener('mousemove', (e: MouseEvent) => {
+            this.handleShoot(new Vector2(e.x, e.y));
         });
     }
 
-    normalizeHeading(rawX: number, rawY: number): Vector2 {
-        return VectorMath.normalize(rawX, rawY);
+    handleShoot(coords: Vector2) {
+        if (this.useWorker) {
+            window.Calculator.calculateHeading(this.position, coords, this.entityId).then(heading =>
+                this.spawnProjectile(heading),
+            );
+        } else {
+            this.spawnProjectile(VectorMath.calculateHeading(this.position, new Vector2(coords.x, coords.y)));
+        }
     }
 
     spawnProjectile(heading) {
@@ -111,7 +119,6 @@ class Player extends LitEntity {
             xMovement += this.movementSpeed;
         }
         this.position = new Vector2(xMovement, yMovement);
-        this.style.top = `${yMovement}px`;
-        this.style.left = `${xMovement}px`;
+        this.style.transform = `translate(${xMovement}px, ${yMovement}px)`;
     }
 }

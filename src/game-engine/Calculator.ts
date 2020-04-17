@@ -16,9 +16,7 @@ export default class Calculator {
     calculations: Array<CalculationPromise> = [];
 
     constructor() {
-        for (let i = 0; i < 20; i++) {
-            this.createMathWorker();
-        }
+        this.createMathWorker();
         window.Calculator = this;
     }
 
