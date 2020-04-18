@@ -23,6 +23,10 @@ class TopdownShooter extends LitElement {
                 padding: 1rem;
                 border: 2px solid #484848;
             }
+
+            p {
+                user-select: none;
+            }
         `;
     }
 

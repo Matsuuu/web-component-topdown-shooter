@@ -15,9 +15,9 @@ declare global {
 }
 
 export interface GameManagerParams {
-    tickRate?: number;
     gameWorld: HTMLElement;
-    showStats: boolean;
+    tickRate?: number;
+    showStats?: boolean;
 }
 
 export default class GameManager {

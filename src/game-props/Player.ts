@@ -19,6 +19,8 @@ class Player extends LitEntity {
     @property({ type: Boolean })
     useWorker: boolean = true;
 
+    hasShotThisTick: boolean = false;
+
     static get properties() {
         return {
             movementDirections: { type: Array },
@@ -74,6 +76,10 @@ class Player extends LitEntity {
     }
 
     handleShoot(coords: Vector2) {
+        if (this.hasShotThisTick) {
+            return;
+        }
+        this.hasShotThisTick = true;
         if (this.useWorker) {
             window.Calculator.calculateHeading(this.position, coords, this.entityId).then(heading =>
                 this.spawnProjectile(heading),
@@ -83,7 +89,7 @@ class Player extends LitEntity {
         }
     }
 
-    spawnProjectile(heading) {
+    spawnProjectile(heading: Vector2) {
         const projectile = document.createElement('player-projectile') as PlayerProjectile;
         projectile.x = this.position.x;
         projectile.y = this.position.y;
@@ -94,6 +100,7 @@ class Player extends LitEntity {
 
     tick() {
         super.tick();
+        this.hasShotThisTick = false;
         this.handleMovement();
     }
 

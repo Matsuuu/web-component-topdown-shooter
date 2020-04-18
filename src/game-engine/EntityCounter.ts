@@ -18,6 +18,7 @@ class EntityCounter extends LitEntity {
 
             p {
                 margin: 0.5rem 0;
+                user-select: none;
             }
         `;
     }

@@ -45,15 +45,21 @@ export default class Projectile extends LitEntity {
     firstUpdated() {
         super.firstUpdated();
         this.style.transform = `translate(${this.x}px, ${this.y}px)`;
+        this.addEventListener('transitionend', () => this.removeProjectile());
 
-        setTimeout(() => {
-            this.style.transform = `translate(${this.crossingCoordinates.x}px, ${this.crossingCoordinates.y}px)`;
-        }, 10);
         if (!Number.isFinite(this.maxLifeTime)) {
             // Dirty hack to remove projectile if we get a invalid transition duration
             this.removeProjectile();
         }
-        this.addEventListener('transitionend', () => this.removeProjectile());
+
+        // We need to figure out a better way to make sure the element has hit the dom
+        setTimeout(() => {
+            this.setDestinationTransform();
+        }, 10);
+    }
+
+    setDestinationTransform() {
+        this.style.transform = `translate(${this.crossingCoordinates.x}px, ${this.crossingCoordinates.y}px)`;
     }
 
     tick() {
