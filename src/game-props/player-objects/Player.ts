@@ -1,10 +1,15 @@
-import { css, customElement, property } from 'lit-element';
+import { css, customElement, html, property } from 'lit-element';
 import PlayerProjectile from './PlayerProjectile';
 import './PlayerProjectile';
-import { Vector2 } from '../game-engine/game-object-types/Vector2';
-import { LitEntity } from '../game-engine/game-entities/LitEntity';
-import VectorMath from '../game-engine/math/VectorMath';
-import { getXBoundary, getYBoundary } from '../game-engine/Boundaries';
+import { Vector2 } from '../../game-engine/game-object-types/Vector2';
+import { LitEntity } from '../../game-engine/game-entities/LitEntity';
+import VectorMath from '../../game-engine/math/VectorMath';
+import normalShadow from './../style-objects/NormalShadow';
+import Weapon from '../base/Weapon';
+import Pistol from '../weapon-objects/Pistol';
+import Shotgun from '../weapon-objects/Shotgun';
+import ScreenShaker from '../../game-engine/juice/ScreenShaker';
+import SMG from '../weapon-objects/SMG';
 
 const controlKeys = ['w', 'a', 's', 'd'];
 
@@ -16,36 +21,32 @@ class Player extends LitEntity {
     movementSpeed: number;
     @property({ type: Vector2 })
     position: Vector2;
+    @property({ type: Weapon })
+    weapon: Weapon;
     @property({ type: Boolean })
-    useWorker: boolean = true;
-
-    hasShotThisTick: boolean = false;
-
-    static get properties() {
-        return {
-            movementDirections: { type: Array },
-            movementSpeed: { type: Number },
-
-            position: { type: Object },
-        };
-    }
+    shooting: boolean = false;
+    @property({ type: Vector2 })
+    mousePosition: Vector2;
 
     static get styles() {
-        return css`
-            :host {
-                position: absolute;
-                top: 0;
-                left: 0;
+        return [
+            normalShadow,
+            css`
+                :host {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
 
-                display: block;
-                width: 5px;
-                height: 5px;
-                background: red;
-                border-radius: 5px;
+                    display: block;
+                    width: 20px;
+                    height: 20px;
+                    background: green;
+                    border-radius: 2.5px;
 
-                will-change: transform;
-            }
-        `;
+                    will-change: transform;
+                }
+            `,
+        ];
     }
 
     constructor() {
@@ -57,6 +58,7 @@ class Player extends LitEntity {
 
     firstUpdated() {
         super.firstUpdated();
+        this.weapon = new SMG();
 
         this.position.x = window.innerWidth / 2;
         this.position.y = window.innerHeight / 2;
@@ -70,47 +72,35 @@ class Player extends LitEntity {
                 this.movementDirections = this.movementDirections.filter(key => key !== e.key);
             }
         });
-        document.addEventListener('mousemove', (e: MouseEvent) => {
-            this.handleShoot(new Vector2(e.x, e.y));
+        document.addEventListener('mousedown', (e: MouseEvent) => {
+            this.shooting = true;
         });
-    }
-
-    handleShoot(coords: Vector2) {
-        if (this.hasShotThisTick) {
-            return;
-        }
-        this.hasShotThisTick = true;
-        if (this.useWorker) {
-            window.Calculator.calculateHeading(this.position, coords, this.entityId).then(heading =>
-                this.spawnProjectile(heading),
-            );
-        } else {
-            this.spawnProjectile(VectorMath.calculateHeading(this.position, new Vector2(coords.x, coords.y)));
-        }
-    }
-
-    spawnProjectile(heading: Vector2) {
-        const projectile = document.createElement('player-projectile') as PlayerProjectile;
-        projectile.x = this.position.x;
-        projectile.y = this.position.y;
-        projectile.movementSpeed = 300 / window.GameManager.tickRate;
-        projectile.heading = heading;
-        window.GameManager.spawnEntity(projectile);
+        document.addEventListener('mouseup', (e: MouseEvent) => {
+            this.shooting = false;
+        });
+        document.addEventListener('mousemove', (e: MouseEvent) => {
+            this.mousePosition = new Vector2(e.x, e.y);
+        });
     }
 
     tick() {
         super.tick();
-        this.hasShotThisTick = false;
         this.handleMovement();
+        if (this.shooting) {
+            this.weapon.handleShoot(this.position, this.mousePosition, this.entityId);
+        }
     }
 
-    handleControl(key) {
+    handleControl(key: string) {
         if (controlKeys.includes(key) && !this.movementDirections.includes(key)) {
             this.movementDirections.push(key);
         }
     }
 
     handleMovement() {
+        if (this.movementDirections.length < 1) {
+            return;
+        }
         let xMovement = this.position.x;
         let yMovement = this.position.y;
         if (this.movementDirections.includes('w')) {
@@ -127,5 +117,9 @@ class Player extends LitEntity {
         }
         this.position = new Vector2(xMovement, yMovement);
         this.style.transform = `translate(${xMovement}px, ${yMovement}px)`;
+    }
+
+    render() {
+        return html``;
     }
 }

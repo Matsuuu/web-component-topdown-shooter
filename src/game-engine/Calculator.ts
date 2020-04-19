@@ -1,4 +1,5 @@
 import { Vector2 } from './game-object-types/Vector2';
+import { getXBoundary, getYBoundary } from './Boundaries';
 
 declare global {
     interface Window {
@@ -37,12 +38,7 @@ export default class Calculator {
         };
     }
 
-    async calculateHeading(source: Vector2, target: Vector2, sourceEntity: number): Promise<Vector2> {
-        this.mathWorker.postMessage({
-            sourceEntity,
-            action: 'calculateHeading',
-            data: { source, target },
-        } as MathWorkerMessage);
+    queueMessage(sourceEntity: number): any {
         return new Promise(resolve => {
             this.calculations.push({
                 sourceEntity,
@@ -51,22 +47,45 @@ export default class Calculator {
         });
     }
 
-    async calculateNextPosition(
-        currentPosition: Vector2,
+    calculateHeading(source: Vector2, target: Vector2, sourceEntity: number): Promise<Vector2> {
+        this.mathWorker.postMessage({
+            sourceEntity,
+            action: 'calculateHeading',
+            data: { source, target },
+        } as MathWorkerMessage);
+        return this.queueMessage(sourceEntity);
+    }
+
+    calculateNextPosition(currentPosition: Vector2, heading: Vector2, movementSpeed: number, sourceEntity: number) {
+        this.mathWorker.postMessage({
+            sourceEntity,
+            action: 'calculateNextPosition',
+            data: { currentPosition, heading, movementSpeed },
+        });
+        return this.queueMessage(sourceEntity);
+    }
+
+    calculateProjectileLifetime(position: Vector2, heading: Vector2, movementSpeed: number, sourceEntity: number) {
+        this.mathWorker.postMessage({
+            sourceEntity,
+            action: 'calculateProjectileLifetime',
+            data: { position, heading, movementSpeed, xBoundary: getXBoundary(), yBoundary: getYBoundary() },
+        });
+        return this.queueMessage(sourceEntity);
+    }
+
+    determineCrossPoint(
+        maxLifeTime: number,
+        position: Vector2,
         heading: Vector2,
         movementSpeed: number,
         sourceEntity: number,
     ) {
         this.mathWorker.postMessage({
             sourceEntity,
-            action: 'calculateNextPosition',
-            data: { currentPosition, heading, movementSpeed },
+            action: 'determineCrossPoint',
+            data: { maxLifeTime, position, heading, movementSpeed },
         });
-        return new Promise(resolve => {
-            this.calculations.push({
-                sourceEntity,
-                resolve,
-            });
-        });
+        return this.queueMessage(sourceEntity);
     }
 }

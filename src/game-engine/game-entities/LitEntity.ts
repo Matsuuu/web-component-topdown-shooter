@@ -1,4 +1,5 @@
 import { LitElement } from 'lit-element';
+import Collider from '../game-object-types/Collider';
 
 export class LitEntity extends LitElement implements GameEntity {
     entityId: number;
@@ -15,5 +16,9 @@ export class LitEntity extends LitElement implements GameEntity {
 
     protected firstUpdated(): void {
         this.addEntity();
+    }
+
+    getCollider(): Collider {
+        return new Collider(this.getBoundingClientRect());
     }
 }

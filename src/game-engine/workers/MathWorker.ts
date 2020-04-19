@@ -4,32 +4,48 @@ import VectorMath from '../math/VectorMath';
 declare var self: Worker;
 
 onmessage = message => {
-    const messageContent = message.data as MathWorkerMessage;
+    const mes = message.data as MathWorkerMessage;
+    const mesData = mes.data;
 
-    switch (messageContent.action) {
+    switch (mes.action) {
         case 'calculateHeading':
-            returnCalculatedHeading(messageContent);
+            self.postMessage({
+                sourceEntity: mes.sourceEntity,
+                result: VectorMath.calculateHeading(mesData.source, mesData.target),
+            } as MathWorkerResponse);
             break;
         case 'calculateNextPosition':
-            returnCalculatedNextPosition(messageContent);
+            self.postMessage({
+                sourceEntity: mes.sourceEntity,
+                result: VectorMath.calculateNextPosition(
+                    mesData.currentPosition,
+                    mesData.heading,
+                    mesData.movementSpeed,
+                ),
+            });
+            break;
+        case 'calculateProjectileLifetime':
+            self.postMessage({
+                sourceEntity: mes.sourceEntity,
+                result: VectorMath.ticksUntilCrossesBorder(
+                    mesData.position,
+                    mesData.heading,
+                    mesData.movementSpeed,
+                    mesData.xBoundary,
+                    mesData.yBoundary,
+                ),
+            } as MathWorkerResponse);
+            break;
+        case 'determineCrossPoint':
+            self.postMessage({
+                sourceEntity: mes.sourceEntity,
+                result: VectorMath.determineCrossPoint(
+                    mesData.maxLifeTime,
+                    mesData.position,
+                    mesData.heading,
+                    mesData.movementSpeed,
+                ),
+            } as MathWorkerResponse);
             break;
     }
-};
-
-const returnCalculatedHeading = (messageContent: MathWorkerMessage) => {
-    self.postMessage({
-        sourceEntity: messageContent.sourceEntity,
-        result: VectorMath.calculateHeading(messageContent.data.source, messageContent.data.target),
-    } as MathWorkerResponse);
-};
-
-const returnCalculatedNextPosition = (messageContent: MathWorkerMessage) => {
-    self.postMessage({
-        sourceEntity: messageContent.sourceEntity,
-        result: VectorMath.calculateNextPosition(
-            messageContent.data.currentPosition,
-            messageContent.data.heading,
-            messageContent.data.movementSpeed,
-        ),
-    });
 };

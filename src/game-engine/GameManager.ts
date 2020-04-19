@@ -1,10 +1,12 @@
 import { InitBoundaries } from './Boundaries';
 import PerformanceStats, { InitPerformanceStats } from './PerformanceStats';
 import Calculator from './Calculator';
+import './EntityCounter';
 
 const defaults: GameManagerParams = {
     tickRate: 64,
     gameWorld: document.body,
+    gameWrapper: document.body,
     showStats: false,
 };
 
@@ -15,7 +17,8 @@ declare global {
 }
 
 export interface GameManagerParams {
-    gameWorld: HTMLElement;
+    gameWrapper: HTMLElement;
+    gameWorld: ShadowRoot | HTMLElement;
     tickRate?: number;
     showStats?: boolean;
 }
@@ -24,7 +27,8 @@ export default class GameManager {
     entities: Array<GameEntity>;
     tickRate: number;
     tickDuration: number;
-    gameWorld: HTMLElement;
+    gameWrapper: HTMLElement;
+    gameWorld: ShadowRoot | HTMLElement;
     showStats: boolean;
 
     constructor(params?: GameManagerParams) {
@@ -34,6 +38,7 @@ export default class GameManager {
 
         this.tickRate = params.tickRate || defaults.tickRate;
         this.tickDuration = 1 / this.tickRate;
+        this.gameWrapper = params.gameWrapper || defaults.gameWrapper;
         this.gameWorld = params.gameWorld || defaults.gameWorld;
         this.showStats = params.showStats || defaults.showStats;
         this.entities = [];
@@ -83,6 +88,6 @@ export default class GameManager {
     }
 
     spawnEntity(elem: HTMLElement) {
-        this.gameWorld.shadowRoot.appendChild(elem);
+        this.gameWorld.appendChild(elem);
     }
 }
