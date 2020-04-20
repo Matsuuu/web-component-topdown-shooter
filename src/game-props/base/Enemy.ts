@@ -1,5 +1,5 @@
 import { LitEntity } from '../../game-engine/game-entities/LitEntity';
-import { css, property } from 'lit-element';
+import { css, property, unsafeCSS } from 'lit-element';
 import { Vector2 } from '../../game-engine/game-object-types/Vector2';
 import BoundaryMath from '../../game-engine/math/BoundaryMath';
 import Projectile from './Projectile';
@@ -82,5 +82,14 @@ export default class Enemy extends LitEntity {
         setTimeout(() => {
             this.classList.remove('damage-flash');
         }, 50);
+    }
+
+    getDamageFlashStyles() {
+        return css`
+            :host(.damage-flash) {
+                background: darkgrey;
+                transform: ${unsafeCSS(this.style.transform)} scale(1.1dw) !important;
+            }
+        `;
     }
 }

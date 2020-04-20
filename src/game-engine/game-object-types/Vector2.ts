@@ -11,8 +11,8 @@ export class Vector2 {
 
     static random() {
         return new Vector2(
-            RandomMath.randomBetweenOneAndTwo().toFixed(2),
-            RandomMath.randomBetweenOneAndTwo().toFixed(2),
+            RandomMath.randomBetweenOneAndMinusOne().toFixed(2),
+            RandomMath.randomBetweenOneAndMinusOne().toFixed(2),
         );
     }
 }

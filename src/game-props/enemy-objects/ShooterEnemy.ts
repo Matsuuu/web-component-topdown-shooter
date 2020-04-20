@@ -22,10 +22,6 @@ export default class ShooterEnemy extends Enemy {
 
                     will-change: transform;
                 }
-
-                :host(.damage-flash) {
-                    background: darkgrey;
-                }
             `,
         ];
     }
@@ -46,6 +42,9 @@ export default class ShooterEnemy extends Enemy {
 
     render() {
         return html`
+            <style>
+                ${this.getDamageFlashStyles()}
+            </style>
             <enemy-health-bar
                 width="${55}"
                 parentWidth="${25}"
