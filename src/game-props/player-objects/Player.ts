@@ -42,6 +42,7 @@ class Player extends LitEntity {
                     height: 20px;
                     background: green;
                     border-radius: 2.5px;
+                    z-index: 10;
 
                     will-change: transform;
                 }

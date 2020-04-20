@@ -15,7 +15,7 @@ export default class SMG extends Weapon {
             return;
         }
         this.canShoot = false;
-        ScreenShaker.shake(4);
+        ScreenShaker.shake(2.5);
         this.getProjectileHeading(shooterLocation, targetCoords, shooterId).then(heading => {
             heading = this.offsetHeading(heading);
             this.spawnProjectile(shooterLocation, heading);

@@ -2,6 +2,7 @@ import { LitElement, html, customElement, css } from 'lit-element';
 import GameManager, { GameManagerParams } from './game-engine/GameManager';
 import './game-props/player-objects/Player';
 import './game-props/enemy-objects/ShooterEnemy';
+import './game-props/world-objects/Structure';
 import { Vector2 } from './game-engine/game-object-types/Vector2';
 
 @customElement('topdown-shooter')
@@ -50,6 +51,21 @@ class TopdownShooter extends LitElement {
             <shooter-enemy .position="${new Vector2(400, 100)}"></shooter-enemy>
             <shooter-enemy .position="${new Vector2(600, 120)}"></shooter-enemy>
             <shooter-enemy .position="${new Vector2(800, 110)}"></shooter-enemy>
+
+            <world-structure
+                .worldPosition="${new Vector2(300, 300)}"
+                .size="${new Vector2(50, 100)}"
+            ></world-structure>
+
+            <world-structure
+                .worldPosition="${new Vector2(200, 300)}"
+                .size="${new Vector2(50, 100)}"
+            ></world-structure>
+
+            <world-structure
+                .worldPosition="${new Vector2(300, 600)}"
+                .size="${new Vector2(500, 100)}"
+            ></world-structure>
         `;
     }
 }
