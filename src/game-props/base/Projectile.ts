@@ -1,6 +1,8 @@
 import { css, property, unsafeCSS } from 'lit-element';
 import { LitEntity } from '../../game-engine/game-entities/LitEntity';
 import { Vector2 } from '../../game-engine/game-object-types/Vector2';
+import ColliderMath from '../../game-engine/math/ColliderMath';
+import VectorMath from '../../game-engine/math/VectorMath';
 
 export default class Projectile extends LitEntity {
     @property({ type: Vector2 })
@@ -29,10 +31,14 @@ export default class Projectile extends LitEntity {
     @property({ type: Number })
     maxLifeTime: number = 0;
 
+    @property({ type: Number })
+    rotation: number;
+
     getProjectileBaseStyles() {
         return css`
             :host {
-                position: absolute;
+                position: fixed;
+                z-index: 1;
                 top: 0;
                 left: 0;
                 will-change: transform;
@@ -60,6 +66,10 @@ export default class Projectile extends LitEntity {
             this.movementSpeed,
             this.entityId,
         );
+
+        this.rotation = VectorMath.lookTowards(this.crossingCoordinates, this.position);
+        this.style.transform = `translate(${this.position.x}px, ${this.position.y}px) rotate(${this.rotation}deg)`;
+
         // This is a absolutely disgusting hack but I'll live with it
         setTimeout(() => {
             window.requestAnimationFrame(() => this.setDestinationTransform());
@@ -73,11 +83,18 @@ export default class Projectile extends LitEntity {
     }
 
     setDestinationTransform() {
-        this.style.transform = `translate(${this.crossingCoordinates.x}px, ${this.crossingCoordinates.y}px)`;
+        this.style.transform = `translate(${this.crossingCoordinates.x}px, ${this.crossingCoordinates.y}px) rotate(${this.rotation}deg)`;
     }
 
     tick() {
         super.tick();
+        this.checkCollisionWithStaticEntities();
+    }
+
+    checkCollisionWithStaticEntities() {
+        if (ColliderMath.isCollidingWithStaticEntity(this.getCollider())) {
+            this.removeProjectile();
+        }
     }
 
     removeProjectile() {

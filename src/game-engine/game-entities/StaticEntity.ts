@@ -16,10 +16,14 @@ export default abstract class StaticEntity extends LitElement {
 
     abstract getCollider(): Collider;
 
+    protected firstUpdated(_changedProperties): void {
+        window.GameManager.addStaticEntity(this);
+    }
+
     getShadows() {
         return css`
             :host {
-                box-shadow: ${this.size.x * 0.75}px ${this.size.x * 0.25 + 1}px 1px ${this.size.x * 0.25 * -1}px #484848;
+                box-shadow: 37.5px 13.5px 1px -11.5px #48484866;
             }
         `;
     }

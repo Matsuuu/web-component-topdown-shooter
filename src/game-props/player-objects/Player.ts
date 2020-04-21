@@ -10,6 +10,9 @@ import Pistol from '../weapon-objects/Pistol';
 import Shotgun from '../weapon-objects/Shotgun';
 import ScreenShaker from '../../game-engine/juice/ScreenShaker';
 import SMG from '../weapon-objects/SMG';
+import ColliderMath from '../../game-engine/math/ColliderMath';
+import StaticEntity from '../../game-engine/game-entities/StaticEntity';
+import TripleMachineGun from '../weapon-objects/TripleMachineGun';
 
 const controlKeys = ['w', 'a', 's', 'd'];
 
@@ -27,6 +30,14 @@ class Player extends LitEntity {
     shooting: boolean = false;
     @property({ type: Vector2 })
     mousePosition: Vector2;
+    @property({ type: Number })
+    rotation: number;
+
+    // Update if player size is changed
+    // Used to center projcetile send location
+    distanceToCenter: Vector2 = new Vector2(5, 0);
+
+    previousPosition: Vector2;
 
     static get styles() {
         return [
@@ -42,7 +53,6 @@ class Player extends LitEntity {
                     height: 20px;
                     background: green;
                     border-radius: 2.5px;
-                    z-index: 10;
 
                     will-change: transform;
                 }
@@ -81,6 +91,7 @@ class Player extends LitEntity {
         });
         document.addEventListener('mousemove', (e: MouseEvent) => {
             this.mousePosition = new Vector2(e.x, e.y);
+            this.rotation = VectorMath.lookTowards(this.mousePosition, this.position);
         });
     }
 
@@ -88,7 +99,11 @@ class Player extends LitEntity {
         super.tick();
         this.handleMovement();
         if (this.shooting) {
-            this.weapon.handleShoot(this.position, this.mousePosition, this.entityId);
+            this.weapon.handleShoot(
+                new Vector2(this.position.x + this.distanceToCenter.x, this.position.y + this.distanceToCenter.y),
+                this.mousePosition,
+                this.entityId,
+            );
         }
     }
 
@@ -102,6 +117,12 @@ class Player extends LitEntity {
         if (this.movementDirections.length < 1) {
             return;
         }
+        if (ColliderMath.isCollidingWithStaticEntity(this.getCollider())) {
+            this.position = this.previousPosition;
+            this.style.transform = `translate(${this.position.x}px, ${this.position.y}px)`;
+            return;
+        }
+
         let xMovement = this.position.x;
         let yMovement = this.position.y;
         if (this.movementDirections.includes('w')) {
@@ -116,8 +137,10 @@ class Player extends LitEntity {
         if (this.movementDirections.includes('d')) {
             xMovement += this.movementSpeed;
         }
+
+        this.previousPosition = { ...this.position };
         this.position = new Vector2(xMovement, yMovement);
-        this.style.transform = `translate(${xMovement}px, ${yMovement}px)`;
+        this.style.transform = `translate(${xMovement}px, ${yMovement}px) rotate(${this.rotation}deg)`;
     }
 
     render() {

@@ -2,11 +2,11 @@ import { Vector2 } from '../../game-engine/game-object-types/Vector2';
 import PlayerProjectile from '../player-objects/PlayerProjectile';
 
 export default abstract class Weapon {
-    coolDown: number;
-    projectileCount: number;
-    projectileSpeed: number;
-    damage: number;
-    canShoot: boolean;
+    abstract coolDown: number;
+    abstract projectileCount: number;
+    abstract projectileSpeed: number;
+    abstract damage: number;
+    abstract canShoot: boolean;
 
     abstract handleShoot(shooterLocation: Vector2, targetCoords: Vector2, shooterId: number): void;
 

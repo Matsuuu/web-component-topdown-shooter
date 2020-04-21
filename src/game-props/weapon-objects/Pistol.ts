@@ -5,7 +5,7 @@ import ScreenShaker from '../../game-engine/juice/ScreenShaker';
 export default class Pistol extends Weapon {
     damage: number = 1;
     projectileCount: number = 1;
-    projectileSpeed: number = 400;
+    projectileSpeed: number = 800;
     canShoot: boolean = true;
     coolDown: number = 500;
 

@@ -8,9 +8,10 @@ export default class PlayerProjectile extends Projectile {
             css`
                 :host {
                     width: 8px;
-                    height: 8px;
-                    border-radius: 50%;
-                    background: blue;
+                    height: 16px;
+                    border-radius: 25% 25% 0 0;
+                    background: #ff6d00;
+                    border: 1px solid black;
                 }
             `,
         ];

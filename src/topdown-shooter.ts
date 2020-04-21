@@ -19,6 +19,9 @@ class TopdownShooter extends LitElement {
         return css`
             :host {
                 position: absolute;
+                background-color: #f5edef;
+                background-image: url('https://www.transparenttextures.com/patterns/batthern.png');
+                /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
                 top: 0;
                 left: 0;
                 width: 100%;
@@ -32,6 +35,7 @@ class TopdownShooter extends LitElement {
                 pointer-events: none;
                 padding: 1rem;
                 border: 2px solid #484848;
+                background: #fff;
             }
 
             p {

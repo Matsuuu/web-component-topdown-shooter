@@ -2,6 +2,7 @@ import { InitBoundaries } from './Boundaries';
 import PerformanceStats, { InitPerformanceStats } from './PerformanceStats';
 import Calculator from './Calculator';
 import './EntityCounter';
+import StaticEntity from './game-entities/StaticEntity';
 
 const defaults: GameManagerParams = {
     tickRate: 64,
@@ -25,6 +26,7 @@ export interface GameManagerParams {
 
 export default class GameManager {
     entities: Array<GameEntity>;
+    staticEntities: Array<StaticEntity>;
     tickRate: number;
     tickDuration: number;
     gameWrapper: HTMLElement;
@@ -42,6 +44,8 @@ export default class GameManager {
         this.gameWorld = params.gameWorld || defaults.gameWorld;
         this.showStats = params.showStats || defaults.showStats;
         this.entities = [];
+        this.staticEntities = [];
+
         InitBoundaries();
         if (this.showStats) {
             InitPerformanceStats();
@@ -89,5 +93,13 @@ export default class GameManager {
 
     spawnEntity(elem: HTMLElement) {
         this.gameWorld.appendChild(elem);
+    }
+
+    addStaticEntity(entity: StaticEntity): void {
+        this.staticEntities.push(entity);
+    }
+
+    getStaticEntities(): Array<StaticEntity> {
+        return this.staticEntities;
     }
 }

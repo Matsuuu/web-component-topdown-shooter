@@ -73,4 +73,15 @@ export default class VectorMath {
 
         return crossCoords;
     }
+
+    /**
+     * Willian Mariager at Stack overflow. You da real mvp.
+     * https://gamedev.stackexchange.com/questions/19550/set-sprite-to-face-direction-of-mouse
+     *
+     * @param target
+     * @param position
+     */
+    static lookTowards(target: Vector2, position: Vector2): number {
+        return Math.floor((Math.atan2(target.y - position.y, target.x - position.x) * 180) / Math.PI + 90);
+    }
 }

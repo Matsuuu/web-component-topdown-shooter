@@ -1,6 +1,5 @@
 import StaticEntity from '../../game-engine/game-entities/StaticEntity';
 import { customElement, html, property } from 'lit-element';
-import { Vector2 } from '../../game-engine/game-object-types/Vector2';
 import Collider from '../../game-engine/game-object-types/Collider';
 
 @customElement('world-structure')
@@ -8,7 +7,8 @@ export default class Structure extends StaticEntity {
     collider: Collider;
 
     protected firstUpdated(_changedProperties): void {
-        this.collider = new Collider(this.querySelector('.bottom-part').getBoundingClientRect());
+        super.firstUpdated(_changedProperties);
+        this.collider = new Collider(this.shadowRoot.querySelector('.bottom-part').getBoundingClientRect());
     }
 
     render() {
@@ -29,14 +29,16 @@ export default class Structure extends StaticEntity {
                     width: 100%;
                     height: ${this.size.y / 3}px;
                     border-bottom: 2px solid #000;
-                    background: #fff;
+                    background-color: #f5edef;
+                    background-image: url("https://www.transparenttextures.com/patterns/dark-denim.png");
                 }
                 .bottom-part {
                     width: 100%;
                     height: ${this.size.y - this.size.y / 3}px;
-                    background: #c4c4c4;
+                    background-color: #f5edef;
+                    background-image: url("https://www.transparenttextures.com/patterns/crissxcross.png");
+                    /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
                     border-bottom: 2px solid #000;
-                    z-index: 999;
                 }
                 ${this.getShadows()}
             </style>
