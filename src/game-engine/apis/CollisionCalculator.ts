@@ -14,6 +14,14 @@ export default class CollisionCalculator extends CalculatorBase {
         super();
         this.createWorker();
         window.CollisionCalculator = this;
+        this.initStaticEntities();
+    }
+
+    initStaticEntities(): void {
+        this.worker.postMessage({
+            action: 'staticEntityList',
+            data: { staticEntityColliders: window.GameManager.getStaticEntityColliders() },
+        });
     }
 
     isColliding(source: Collider, target: Collider, sourceEntity: number): Promise<boolean> {
@@ -29,7 +37,7 @@ export default class CollisionCalculator extends CalculatorBase {
         this.worker.postMessage({
             sourceEntity,
             action: 'isCollidingWithStaticEntity',
-            data: { source, staticEntityColliders: window.GameManager.getStaticEntityColliders() },
+            data: { source },
         });
         return this.queueMessage(sourceEntity);
     }

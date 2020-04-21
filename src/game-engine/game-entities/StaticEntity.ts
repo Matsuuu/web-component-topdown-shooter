@@ -17,7 +17,10 @@ export default abstract class StaticEntity extends LitElement {
     abstract getCollider(): Collider;
 
     protected firstUpdated(_changedProperties): void {
-        window.GameManager.addStaticEntity(this);
+        setTimeout(() => {
+            console.log(this);
+            window.GameManager.addStaticEntity(this);
+        });
     }
 
     getShadows() {

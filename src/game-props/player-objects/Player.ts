@@ -69,7 +69,7 @@ class Player extends LitEntity {
 
     firstUpdated() {
         super.firstUpdated();
-        this.weapon = new TripleMachineGun();
+        this.weapon = new SMG(this);
 
         this.position.x = window.innerWidth / 2;
         this.position.y = window.innerHeight / 2;
@@ -96,9 +96,13 @@ class Player extends LitEntity {
         });
     }
 
-    tick() {
+    tick(): void {
         super.tick();
         this.handleMovement();
+        this.handleShooting();
+    }
+
+    handleShooting(): void {
         if (this.shooting) {
             this.weapon.handleShoot(
                 new Vector2(this.position.x + this.distanceToCenter.x, this.position.y + this.distanceToCenter.y),
@@ -108,13 +112,13 @@ class Player extends LitEntity {
         }
     }
 
-    handleControl(key: string) {
+    handleControl(key: string): void {
         if (controlKeys.includes(key) && !this.movementDirections.includes(key)) {
             this.movementDirections.push(key);
         }
     }
 
-    handleMovement() {
+    handleMovement(): void {
         if (this.movementDirections.length < 1) {
             return;
         }
@@ -146,7 +150,7 @@ class Player extends LitEntity {
         this.setTranslate();
     }
 
-    setTranslate() {
+    setTranslate(): void {
         this.style.transform = `translate(${this.position.x}px, ${this.position.y}px) rotate(${this.rotation}deg)`;
     }
 

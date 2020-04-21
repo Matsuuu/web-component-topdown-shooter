@@ -5,6 +5,7 @@ import './EntityCounter';
 import StaticEntity from './game-entities/StaticEntity';
 import CollisionCalculator from './apis/CollisionCalculator';
 import Collider from './game-object-types/Collider';
+import RandomMath from './math/RandomMath';
 
 const defaults: GameManagerParams = {
     tickRate: 64,
@@ -52,14 +53,17 @@ export default class GameManager {
         if (this.showStats) {
             InitPerformanceStats();
         }
-        this.initSingletonHelpers();
         window.GameManager = this;
+        this.initSingletonHelpers();
     }
 
     initSingletonHelpers() {
         new Calculator();
         new CollisionCalculator();
-        console.log('Ebin');
+    }
+
+    initStaticEntities() {
+        window.CollisionCalculator.initStaticEntities();
     }
 
     startGame(): void {
@@ -89,7 +93,7 @@ export default class GameManager {
     }
 
     addGameEntity(entity: GameEntity): number {
-        entity.entityId = Date.now();
+        entity.entityId = Date.now() + RandomMath.randomNumber(100, 999);
         this.entities.push(entity);
         // Return ID for removal purpouses
         return entity.entityId;
@@ -105,6 +109,7 @@ export default class GameManager {
 
     addStaticEntity(entity: StaticEntity): void {
         this.staticEntities.push(entity);
+        this.initStaticEntities();
     }
 
     getStaticEntities(): Array<StaticEntity> {

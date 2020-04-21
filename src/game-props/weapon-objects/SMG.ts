@@ -2,13 +2,19 @@ import Weapon from '../base/Weapon';
 import { Vector2 } from '../../game-engine/game-object-types/Vector2';
 import ScreenShaker from '../../game-engine/juice/ScreenShaker';
 import RandomMath from '../../game-engine/math/RandomMath';
+import './muzzles/BulletGunMuzzle';
+import { MuzzleTypes } from './muzzles/MuzzleTypes';
 
 export default class SMG extends Weapon {
-    damage: number = 0.3;
+    damage: number = 1;
     projectileCount: number = 1;
     projectileSpeed: number = 600;
-    canShoot: boolean = true;
     coolDown: number = 100;
+
+    constructor(owner) {
+        super();
+        this.initMuzzle(owner, MuzzleTypes.BulletGuMuzzle);
+    }
 
     handleShoot(shooterLocation: Vector2, targetCoords: Vector2, shooterId: number): void {
         if (!this.canShoot) {
@@ -18,7 +24,9 @@ export default class SMG extends Weapon {
         ScreenShaker.shake(2.5);
         this.getProjectileHeading(shooterLocation, targetCoords, shooterId).then(heading => {
             heading = this.offsetHeading(heading);
+            shooterLocation = this.adjustShooterLocation(shooterLocation, heading);
             this.spawnProjectile(shooterLocation, heading);
+            this.handleMuzzle();
             this.handleCoolDown();
         });
     }
