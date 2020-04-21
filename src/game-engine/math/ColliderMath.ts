@@ -18,10 +18,21 @@ export default class ColliderMath {
         return true;
     }
 
-    static isCollidingWithStaticEntity(source: Collider): boolean {
+    /**
+     * Check if object collides with something static in the game world e.g. a wall.
+     * optional param staticEntityColliders is to that workers can utilize this script,
+     * since they can't query GameManager for the static entities
+     *
+     * @param source
+     * @param staticEntityColliders
+     */
+    static isCollidingWithStaticEntity(source: Collider, staticEntityColliders?: Array<Collider>): boolean {
         let isColliding = false;
-        for (const entity of window.GameManager.getStaticEntities()) {
-            if (ColliderMath.isColliding(source, entity.getCollider())) {
+        if (!staticEntityColliders) {
+            staticEntityColliders = window.GameManager.getStaticEntities().map(entity => entity.getCollider());
+        }
+        for (const entityCollider of staticEntityColliders) {
+            if (ColliderMath.isColliding(source, entityCollider)) {
                 isColliding = true;
                 break;
             }

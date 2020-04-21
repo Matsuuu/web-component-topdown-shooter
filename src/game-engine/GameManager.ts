@@ -1,8 +1,10 @@
 import { InitBoundaries } from './Boundaries';
 import PerformanceStats, { InitPerformanceStats } from './PerformanceStats';
-import Calculator from './Calculator';
+import Calculator from './apis/Calculator';
 import './EntityCounter';
 import StaticEntity from './game-entities/StaticEntity';
+import CollisionCalculator from './apis/CollisionCalculator';
+import Collider from './game-object-types/Collider';
 
 const defaults: GameManagerParams = {
     tickRate: 64,
@@ -50,8 +52,14 @@ export default class GameManager {
         if (this.showStats) {
             InitPerformanceStats();
         }
-        new Calculator();
+        this.initSingletonHelpers();
         window.GameManager = this;
+    }
+
+    initSingletonHelpers() {
+        new Calculator();
+        new CollisionCalculator();
+        console.log('Ebin');
     }
 
     startGame(): void {
@@ -101,5 +109,9 @@ export default class GameManager {
 
     getStaticEntities(): Array<StaticEntity> {
         return this.staticEntities;
+    }
+
+    getStaticEntityColliders(): Array<Collider> {
+        return this.staticEntities.map(entity => entity.getCollider());
     }
 }

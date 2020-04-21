@@ -1,4 +1,4 @@
-interface MathWorkerResponse {
+interface WorkerResponse {
     sourceEntity: number;
     result: any;
 }

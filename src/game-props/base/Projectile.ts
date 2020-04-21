@@ -92,9 +92,11 @@ export default class Projectile extends LitEntity {
     }
 
     checkCollisionWithStaticEntities() {
-        if (ColliderMath.isCollidingWithStaticEntity(this.getCollider())) {
-            this.removeProjectile();
-        }
+        window.CollisionCalculator.isCollidingWithStaticEntity(this.getCollider(), this.entityId).then(isColliding => {
+            if (isColliding) {
+                this.removeProjectile();
+            }
+        });
     }
 
     removeProjectile() {

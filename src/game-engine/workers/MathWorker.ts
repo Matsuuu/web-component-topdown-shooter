@@ -4,7 +4,7 @@ import VectorMath from '../math/VectorMath';
 declare var self: Worker;
 
 onmessage = message => {
-    const mes = message.data as MathWorkerMessage;
+    const mes = message.data as WorkerMessage;
     const mesData = mes.data;
 
     switch (mes.action) {
@@ -12,7 +12,7 @@ onmessage = message => {
             self.postMessage({
                 sourceEntity: mes.sourceEntity,
                 result: VectorMath.calculateHeading(mesData.source, mesData.target),
-            } as MathWorkerResponse);
+            } as WorkerResponse);
             break;
         case 'calculateNextPosition':
             self.postMessage({
@@ -34,7 +34,7 @@ onmessage = message => {
                     mesData.xBoundary,
                     mesData.yBoundary,
                 ),
-            } as MathWorkerResponse);
+            } as WorkerResponse);
             break;
         case 'determineCrossPoint':
             self.postMessage({
@@ -45,7 +45,7 @@ onmessage = message => {
                     mesData.heading,
                     mesData.movementSpeed,
                 ),
-            } as MathWorkerResponse);
+            } as WorkerResponse);
             break;
     }
 };

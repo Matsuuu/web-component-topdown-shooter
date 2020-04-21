@@ -29,9 +29,9 @@ class Player extends LitEntity {
     @property({ type: Boolean })
     shooting: boolean = false;
     @property({ type: Vector2 })
-    mousePosition: Vector2;
+    mousePosition: Vector2 = new Vector2(0, 0);
     @property({ type: Number })
-    rotation: number;
+    rotation: number = 0;
 
     // Update if player size is changed
     // Used to center projcetile send location
@@ -69,7 +69,7 @@ class Player extends LitEntity {
 
     firstUpdated() {
         super.firstUpdated();
-        this.weapon = new SMG();
+        this.weapon = new TripleMachineGun();
 
         this.position.x = window.innerWidth / 2;
         this.position.y = window.innerHeight / 2;
@@ -92,6 +92,7 @@ class Player extends LitEntity {
         document.addEventListener('mousemove', (e: MouseEvent) => {
             this.mousePosition = new Vector2(e.x, e.y);
             this.rotation = VectorMath.lookTowards(this.mousePosition, this.position);
+            this.setTranslate();
         });
     }
 
@@ -117,9 +118,11 @@ class Player extends LitEntity {
         if (this.movementDirections.length < 1) {
             return;
         }
+
+        // TODO: Check if it's safer to do player collision checks on main thread vs messaging
         if (ColliderMath.isCollidingWithStaticEntity(this.getCollider())) {
             this.position = this.previousPosition;
-            this.style.transform = `translate(${this.position.x}px, ${this.position.y}px)`;
+            this.setTranslate();
             return;
         }
 
@@ -140,7 +143,11 @@ class Player extends LitEntity {
 
         this.previousPosition = { ...this.position };
         this.position = new Vector2(xMovement, yMovement);
-        this.style.transform = `translate(${xMovement}px, ${yMovement}px) rotate(${this.rotation}deg)`;
+        this.setTranslate();
+    }
+
+    setTranslate() {
+        this.style.transform = `translate(${this.position.x}px, ${this.position.y}px) rotate(${this.rotation}deg)`;
     }
 
     render() {

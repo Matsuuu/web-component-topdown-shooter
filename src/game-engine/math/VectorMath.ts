@@ -21,15 +21,25 @@ export default class VectorMath {
         );
     }
 
-    static ticksUntilCrossesXAxis(position: Vector2, heading: Vector2, movementSpeed: number, boundary: Boundary) {
+    static ticksUntilCrossesXAxis(
+        position: Vector2,
+        heading: Vector2,
+        movementSpeed: number,
+        boundary: Boundary,
+    ): number {
         return VectorMath.ticksUntilCrossesAxis(position.x, heading.x, movementSpeed, boundary);
     }
 
-    static ticksUntilCrossesYAxis(position: Vector2, heading: Vector2, movementSpeed: number, boundary: Boundary) {
+    static ticksUntilCrossesYAxis(
+        position: Vector2,
+        heading: Vector2,
+        movementSpeed: number,
+        boundary: Boundary,
+    ): number {
         return VectorMath.ticksUntilCrossesAxis(position.y, heading.y, movementSpeed, boundary);
     }
 
-    static ticksUntilCrossesAxis(position: number, heading: number, movementSpeed: number, boundary: Boundary) {
+    static ticksUntilCrossesAxis(position: number, heading: number, movementSpeed: number, boundary: Boundary): number {
         if (heading < 0) {
             return Math.ceil((position - boundary.min) / movementSpeed / Math.abs(heading)) + 1;
         }
