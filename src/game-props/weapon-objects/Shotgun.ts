@@ -9,6 +9,7 @@ export default class Shotgun extends Weapon {
     projectileCount: number = 8;
     projectileSpeed: number = 800;
     coolDown: number = 1500;
+    knockBack: number = 20;
 
     constructor(owner) {
         super();
@@ -29,7 +30,7 @@ export default class Shotgun extends Weapon {
                 heading.y -= 0.08;
             }
             for (let i = 0; i < this.projectileCount; i++) {
-                this.spawnProjectile(shooterLocation, { ...heading });
+                this.spawnProjectile(shooterLocation, { ...heading } as Vector2);
                 if (spreadByXAxis) {
                     heading.x += 0.02;
                 } else {

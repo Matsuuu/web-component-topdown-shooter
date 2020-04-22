@@ -9,6 +9,7 @@ export default class Pistol extends Weapon {
     projectileCount: number = 1;
     projectileSpeed: number = 800;
     coolDown: number = 500;
+    knockBack: number = 2;
 
     constructor(owner) {
         super();

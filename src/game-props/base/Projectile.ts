@@ -1,7 +1,6 @@
 import { css, property, unsafeCSS } from 'lit-element';
 import { LitEntity } from '../../game-engine/game-entities/LitEntity';
 import { Vector2 } from '../../game-engine/game-object-types/Vector2';
-import ColliderMath from '../../game-engine/math/ColliderMath';
 import VectorMath from '../../game-engine/math/VectorMath';
 
 export default class Projectile extends LitEntity {
@@ -30,9 +29,10 @@ export default class Projectile extends LitEntity {
     // Time until we kill the projectile unless it has hit something
     @property({ type: Number })
     maxLifeTime: number = 0;
-
     @property({ type: Number })
     rotation: number;
+    @property({ type: Number })
+    knockBack: number;
 
     getProjectileBaseStyles() {
         return css`

@@ -48,8 +48,9 @@ export default class Enemy extends LitEntity {
     checkPlayerProjectileCollisions(): Array<CollisionEvent> {
         let collisionEvents: Array<CollisionEvent> = [];
         this.getPlayerProjectiles().map((proj: PlayerProjectile) => {
-            if (ColliderMath.isColliding(this.getCollider(), proj.getCollider())) {
-                collisionEvents.push(new CollisionEvent(this, proj));
+            const collision = ColliderMath.getCollision(proj, this);
+            if (collision) {
+                collisionEvents.push(collision);
                 proj.removeProjectile();
             }
         });
@@ -62,6 +63,7 @@ export default class Enemy extends LitEntity {
             collisionEvents.forEach(ev => {
                 const projectile = ev.source as Projectile;
                 this.reduceHealth(projectile.damage);
+                this.position.reduce(ev.collisionDirection.multiply(projectile.knockBack).reverse());
             });
         }
     }
@@ -92,4 +94,15 @@ export default class Enemy extends LitEntity {
             }
         `;
     }
+
+    getPositionStyles() {
+        return css`
+            :host {
+                transition: 100ms linear transform;
+                transform: translate(${unsafeCSS(this.position.x)}px, ${unsafeCSS(this.position.y)}px);
+            }
+        `;
+    }
+
+    updatePosition(): void {}
 }

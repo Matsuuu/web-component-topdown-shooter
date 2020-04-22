@@ -1,5 +1,8 @@
 import Collider from '../game-object-types/Collider';
 import StaticEntity from '../game-entities/StaticEntity';
+import CollisionEvent from '../game-object-types/CollisionEvent';
+import { Vector2 } from '../game-object-types/Vector2';
+import { LitEntity } from '../game-entities/LitEntity';
 
 export default class ColliderMath {
     static isColliding(source: Collider, target: Collider, circleCollision: boolean = false): boolean {
@@ -14,6 +17,26 @@ export default class ColliderMath {
         );
     }
 
+    static getCollision(source: LitEntity, target: LitEntity): CollisionEvent {
+        const sourceCollider = source.getCollider();
+        const targetCollider = target.getCollider();
+
+        if (ColliderMath.isColliding(sourceCollider, targetCollider)) {
+            const higherX = Math.max(sourceCollider.center.x, targetCollider.center.x);
+            const higherY = Math.max(sourceCollider.center.y, targetCollider.center.y);
+            let collisionDirection = new Vector2(0, 0);
+            collisionDirection.y = higherY === sourceCollider.center.y ? -1 : 1;
+            collisionDirection.x = higherX === sourceCollider.center.x ? -1 : 1;
+            return new CollisionEvent(source, target, collisionDirection);
+        }
+        return null;
+    }
+
+    /**
+     * TODO
+     * @param source
+     * @param target
+     */
     static isCircleColliding(source: Collider, target: Collider): boolean {
         return true;
     }

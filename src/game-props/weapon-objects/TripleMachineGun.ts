@@ -9,6 +9,7 @@ export default class TripleMachineGun extends Weapon {
     damage: number = 0.3;
     projectileCount: number = 3;
     projectileSpeed: number = 800;
+    knockBack: number = 2;
 
     projectileOffset: number = 0.15;
 

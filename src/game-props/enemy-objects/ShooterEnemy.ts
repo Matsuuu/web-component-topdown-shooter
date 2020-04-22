@@ -33,7 +33,6 @@ export default class ShooterEnemy extends Enemy {
 
     protected firstUpdated(): void {
         super.firstUpdated();
-        this.style.transform = `translate(${this.position.x}px, ${this.position.y}px)`;
     }
 
     tick() {
@@ -44,6 +43,7 @@ export default class ShooterEnemy extends Enemy {
         return html`
             <style>
                 ${this.getDamageFlashStyles()}
+                ${this.getPositionStyles()}
             </style>
             <enemy-health-bar
                 width="${55}"

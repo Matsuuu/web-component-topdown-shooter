@@ -10,6 +10,7 @@ export default abstract class Weapon {
     abstract projectileCount: number;
     abstract projectileSpeed: number;
     abstract damage: number;
+    abstract knockBack: number;
     canShoot: boolean = true;
     muzzle: Muzzle;
 
@@ -21,6 +22,7 @@ export default abstract class Weapon {
         projectile.movementSpeed = this.projectileSpeed / window.GameManager.tickRate;
         projectile.heading = heading;
         projectile.damage = this.damage;
+        projectile.knockBack = this.knockBack;
         window.GameManager.spawnEntity(projectile);
     }
 
@@ -42,7 +44,7 @@ export default abstract class Weapon {
         this.muzzle.classList.add('flash');
         setTimeout(() => {
             this.muzzle.classList.remove('flash');
-        }, 200);
+        }, 100);
     }
 
     protected initMuzzle(owner: LitEntity, muzzleType: MuzzleTypes) {

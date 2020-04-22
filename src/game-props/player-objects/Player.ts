@@ -1,18 +1,15 @@
 import { css, customElement, html, property } from 'lit-element';
-import PlayerProjectile from './PlayerProjectile';
 import './PlayerProjectile';
 import { Vector2 } from '../../game-engine/game-object-types/Vector2';
 import { LitEntity } from '../../game-engine/game-entities/LitEntity';
 import VectorMath from '../../game-engine/math/VectorMath';
 import normalShadow from './../style-objects/NormalShadow';
 import Weapon from '../base/Weapon';
-import Pistol from '../weapon-objects/Pistol';
 import Shotgun from '../weapon-objects/Shotgun';
-import ScreenShaker from '../../game-engine/juice/ScreenShaker';
-import SMG from '../weapon-objects/SMG';
 import ColliderMath from '../../game-engine/math/ColliderMath';
-import StaticEntity from '../../game-engine/game-entities/StaticEntity';
+import Pistol from '../weapon-objects/Pistol';
 import TripleMachineGun from '../weapon-objects/TripleMachineGun';
+import SMG from '../weapon-objects/SMG';
 
 const controlKeys = ['w', 'a', 's', 'd'];
 
@@ -145,7 +142,7 @@ class Player extends LitEntity {
             xMovement += this.movementSpeed;
         }
 
-        this.previousPosition = { ...this.position };
+        this.previousPosition = { ...this.position } as Vector2;
         this.position = new Vector2(xMovement, yMovement);
         this.setTranslate();
     }

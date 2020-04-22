@@ -14,7 +14,7 @@ export default class BulletGunMuzzle extends Muzzle {
                     position: relative;
                     width: 5px;
                     height: 5px;
-                    transition: 0.05s linear;
+                    transition: 10ms linear;
                     transform: translate(${this.offsetX}px, ${this.offsetY}px) scale(0);
                 }
 
