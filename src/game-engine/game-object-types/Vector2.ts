@@ -20,6 +20,12 @@ export class Vector2 {
         return new Vector2(-this.x, -this.y);
     }
 
+    add(other: Vector2): Vector2 {
+        this.x += other.x;
+        this.y += other.y;
+        return this;
+    }
+
     reduce(other: Vector2): Vector2 {
         this.x -= other.x;
         this.y -= other.y;

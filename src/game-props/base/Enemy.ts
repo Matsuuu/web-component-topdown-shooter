@@ -20,6 +20,8 @@ export default class Enemy extends LitEntity {
     deathActions;
     @property({ type: Boolean })
     healthBarIsShowing = false;
+    @property({ type: Boolean })
+    canBeKnockedBack = true;
 
     protected firstUpdated(): void {
         super.firstUpdated();
@@ -62,9 +64,16 @@ export default class Enemy extends LitEntity {
         if (collisionEvents.length > 0) {
             collisionEvents.forEach(ev => {
                 const projectile = ev.source as Projectile;
+                ev.collisionDirection.add(projectile.heading);
                 this.reduceHealth(projectile.damage);
-                this.position.reduce(ev.collisionDirection.multiply(projectile.knockBack).reverse());
+                this.handleKnockBack(ev.collisionDirection, projectile.knockBack);
             });
+        }
+    }
+
+    handleKnockBack(collisionDirection: Vector2, knockBack: number): void {
+        if (this.canBeKnockedBack) {
+            this.position.reduce(collisionDirection.multiply(knockBack).reverse());
         }
     }
 
@@ -103,6 +112,4 @@ export default class Enemy extends LitEntity {
             }
         `;
     }
-
-    updatePosition(): void {}
 }
