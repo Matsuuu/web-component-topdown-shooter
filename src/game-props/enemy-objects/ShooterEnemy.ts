@@ -26,13 +26,9 @@ export default class ShooterEnemy extends Enemy {
         ];
     }
 
-    connectedCallback(): void {
-        super.connectedCallback();
+    init() {
+        super.init();
         this.health = this.maxHealth = 30;
-    }
-
-    protected firstUpdated(): void {
-        super.firstUpdated();
     }
 
     tick() {

@@ -47,8 +47,8 @@ export default class Projectile extends LitEntity {
         `;
     }
 
-    connectedCallback(): void {
-        super.connectedCallback();
+    init() {
+        super.init();
         this.addEventListener('transitionend', () => this.removeProjectile());
     }
 
@@ -77,7 +77,6 @@ export default class Projectile extends LitEntity {
     }
 
     firstUpdated() {
-        super.firstUpdated();
         this.style.transform = `translate(${this.position.x}px, ${this.position.y}px)`;
         this.setProjectileTrajectory();
     }

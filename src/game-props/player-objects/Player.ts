@@ -16,7 +16,7 @@ const controlKeys = ['w', 'a', 's', 'd'];
 @customElement('player-element')
 class Player extends LitEntity {
     @property({ type: Array<String>() })
-    movementDirections: Array<String>;
+    movementDirections: Array<String> = [];
     @property({ type: Number })
     movementSpeed: number;
     @property({ type: Vector2 })
@@ -57,15 +57,12 @@ class Player extends LitEntity {
         ];
     }
 
-    constructor() {
-        super();
+    init() {
+        super.init();
         this.movementDirections = [];
         this.movementSpeed = 200 / window.GameManager.tickRate;
         this.position = new Vector2(0, 0);
-    }
 
-    firstUpdated() {
-        super.firstUpdated();
         this.weapon = new SMG(this);
 
         this.position.x = window.innerWidth / 2;

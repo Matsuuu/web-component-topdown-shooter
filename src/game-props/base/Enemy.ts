@@ -23,10 +23,6 @@ export default class Enemy extends LitEntity {
     @property({ type: Boolean })
     canBeKnockedBack = true;
 
-    protected firstUpdated(): void {
-        super.firstUpdated();
-    }
-
     reduceHealth(amount: number) {
         this.health -= amount;
         if (this.health < 0) {

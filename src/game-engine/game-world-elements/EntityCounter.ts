@@ -1,4 +1,4 @@
-import { LitEntity } from './game-entities/LitEntity';
+import { LitEntity } from '../game-entities/LitEntity';
 import { css, customElement, html, property } from 'lit-element';
 
 @customElement('entity-counter')
@@ -21,6 +21,10 @@ class EntityCounter extends LitEntity {
                 user-select: none;
             }
         `;
+    }
+
+    init() {
+        super.init();
     }
 
     tick() {

@@ -1,7 +1,8 @@
 import { InitBoundaries } from './Boundaries';
-import PerformanceStats, { InitPerformanceStats } from './PerformanceStats';
+import PerformanceStats, { InitPerformanceStats } from './game-world-elements/PerformanceStats';
 import Calculator from './apis/Calculator';
-import './EntityCounter';
+import './game-world-elements/EntityCounter';
+import './game-world-elements/GameWorld';
 import StaticEntity from './game-entities/StaticEntity';
 import CollisionCalculator from './apis/CollisionCalculator';
 import Collider from './game-object-types/Collider';
