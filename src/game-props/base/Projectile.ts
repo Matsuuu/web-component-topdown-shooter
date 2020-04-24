@@ -12,23 +12,15 @@ export default class Projectile extends LitEntity {
     damage: number = 0;
     @property({ type: Vector2 })
     heading: Vector2;
-    // Coordinates at which the object crosses the screen.
-    // Used for translate position so the projectile navigates to
-    // correct direction
     @property({ type: Vector2 })
-    crossingCoordinates: Vector2;
+    targetCoordinates: Vector2;
     /**
      * Lifetime in game ticks.
-     * If one wants the projectiles to disappear as they leave the screen,
-     * one doesn't need to do anything with this.
      *
-     * If however one wants to put a lifetime for projectiles, this is here for that purpose.
+     * Distance is Heading * lifetime * movementSpeed
      */
     @property({ type: Number })
-    lifetime: number = 0;
-    // Time until we kill the projectile unless it has hit something
-    @property({ type: Number })
-    maxLifeTime: number = 0;
+    lifeTime: number = 1;
     @property({ type: Number })
     rotation: number;
     @property({ type: Number })
@@ -42,7 +34,7 @@ export default class Projectile extends LitEntity {
                 top: 0;
                 left: 0;
                 will-change: transform;
-                transition: ${unsafeCSS(window.GameManager.tickDuration * this.maxLifeTime)}s linear;
+                transition: ${unsafeCSS(window.GameManager.tickDuration * this.lifeTime)}s linear;
             }
         `;
     }
@@ -53,21 +45,15 @@ export default class Projectile extends LitEntity {
     }
 
     async setProjectileTrajectory() {
-        this.maxLifeTime = await window.Calculator.calculateProjectileLifetime(
-            this.position,
-            this.heading,
-            this.movementSpeed,
-            this.entityId,
-        );
-        this.crossingCoordinates = await window.Calculator.determineCrossPoint(
-            this.maxLifeTime,
+        this.targetCoordinates = await window.Calculator.getProjectileTarget(
+            this.lifeTime,
             this.position,
             this.heading,
             this.movementSpeed,
             this.entityId,
         );
 
-        this.rotation = VectorMath.lookTowards(this.crossingCoordinates, this.position);
+        this.rotation = VectorMath.lookTowards(this.targetCoordinates, this.position);
         this.style.transform = `translate(${this.position.x}px, ${this.position.y}px) rotate(${this.rotation}deg)`;
 
         // This is a absolutely disgusting hack but I'll live with it
@@ -82,7 +68,7 @@ export default class Projectile extends LitEntity {
     }
 
     setDestinationTransform() {
-        this.style.transform = `translate(${this.crossingCoordinates.x}px, ${this.crossingCoordinates.y}px) rotate(${this.rotation}deg)`;
+        this.style.transform = `translate(${this.targetCoordinates.x}px, ${this.targetCoordinates.y}px) rotate(${this.rotation}deg)`;
     }
 
     tick() {

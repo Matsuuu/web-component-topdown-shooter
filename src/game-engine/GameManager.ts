@@ -1,12 +1,13 @@
-import { InitBoundaries } from './Boundaries';
+import { InitBoundaries } from './apis/boundaries/Boundaries';
 import PerformanceStats, { InitPerformanceStats } from './game-world-elements/PerformanceStats';
-import Calculator from './apis/Calculator';
+import Calculator from './apis/calculation/Calculator';
 import './game-world-elements/EntityCounter';
 import './game-world-elements/GameWorld';
 import StaticEntity from './game-entities/StaticEntity';
-import CollisionCalculator from './apis/CollisionCalculator';
+import CollisionCalculator from './apis/calculation/CollisionCalculator';
 import Collider from './game-object-types/Collider';
 import RandomMath from './math/RandomMath';
+import InitCamera, { CameraProperties } from './apis/camera/Camera';
 
 const defaults: GameManagerParams = {
     tickRate: 64,
@@ -50,6 +51,7 @@ export default class GameManager {
         this.entities = [];
         this.staticEntities = [];
 
+        InitCamera({ gameWorld: this.gameWrapper } as CameraProperties);
         InitBoundaries();
         if (this.showStats) {
             InitPerformanceStats();

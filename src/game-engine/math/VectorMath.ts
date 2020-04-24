@@ -1,5 +1,5 @@
 import { Vector2 } from '../game-object-types/Vector2';
-import { Boundary, getXBoundary, getYBoundary } from '../Boundaries';
+import { Boundary, getXBoundary, getYBoundary } from '../apis/boundaries/Boundaries';
 
 export default class VectorMath {
     static normalize(x: number, y: number, precision: number = 2): Vector2 {
@@ -62,26 +62,21 @@ export default class VectorMath {
         return Math.min(xCrossTicks, yCrossTicks);
     }
 
-    static determineCrossPoint(
-        calculatedTickCount: number,
-        position: Vector2,
-        heading: Vector2,
-        movementSpeed: number,
-    ): Vector2 {
+    static determineCrossPoint(lifeTime: number, position: Vector2, heading: Vector2, movementSpeed: number): Vector2 {
         let crossCoords = { x: null, y: null };
         if (heading.y < 0) {
-            crossCoords.y = position.y - calculatedTickCount * movementSpeed * Math.abs(heading.y);
+            crossCoords.y = position.y - lifeTime * movementSpeed * Math.abs(heading.y);
         } else {
-            crossCoords.y = position.y + calculatedTickCount * movementSpeed * heading.y;
+            crossCoords.y = position.y + lifeTime * movementSpeed * heading.y;
         }
 
         if (heading.x < 0) {
-            crossCoords.x = position.x - calculatedTickCount * movementSpeed * Math.abs(heading.x);
+            crossCoords.x = position.x - lifeTime * movementSpeed * Math.abs(heading.x);
         } else {
-            crossCoords.x = position.x + calculatedTickCount * movementSpeed * heading.x;
+            crossCoords.x = position.x + lifeTime * movementSpeed * heading.x;
         }
 
-        return crossCoords;
+        return crossCoords as Vector2;
     }
 
     /**

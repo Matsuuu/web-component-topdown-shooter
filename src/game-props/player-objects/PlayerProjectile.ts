@@ -3,6 +3,7 @@ import Projectile from '../base/Projectile';
 
 @customElement('player-projectile')
 export default class PlayerProjectile extends Projectile {
+    lifeTime = 100;
     static get styles() {
         return [
             css`

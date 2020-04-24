@@ -61,12 +61,8 @@ class Player extends LitEntity {
         super.init();
         this.movementDirections = [];
         this.movementSpeed = 200 / window.GameManager.tickRate;
-        this.position = new Vector2(0, 0);
-
         this.weapon = new SMG(this);
 
-        this.position.x = window.innerWidth / 2;
-        this.position.y = window.innerHeight / 2;
         this.style.transform = `translate(${this.position.x}px, ${this.position.y}px)`;
 
         document.addEventListener('keydown', (e: KeyboardEvent) => {
@@ -85,7 +81,10 @@ class Player extends LitEntity {
         });
         document.addEventListener('mousemove', (e: MouseEvent) => {
             this.mousePosition = new Vector2(e.x, e.y);
-            this.rotation = VectorMath.lookTowards(this.mousePosition, this.position);
+            this.rotation = VectorMath.lookTowards(
+                this.mousePosition.reduce(window.Camera.getPosition()),
+                this.position,
+            );
             this.setTranslate();
         });
     }

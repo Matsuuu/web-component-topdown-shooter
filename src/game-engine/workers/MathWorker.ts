@@ -40,7 +40,7 @@ onmessage = message => {
             self.postMessage({
                 sourceEntity: mes.sourceEntity,
                 result: VectorMath.determineCrossPoint(
-                    mesData.maxLifeTime,
+                    mesData.lifeTime,
                     mesData.position,
                     mesData.heading,
                     mesData.movementSpeed,

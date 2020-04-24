@@ -1,4 +1,4 @@
-import { Boundary } from '../Boundaries';
+import { Boundary } from '../apis/boundaries/Boundaries';
 import { Vector2 } from '../game-object-types/Vector2';
 
 export default class BoundaryMath {

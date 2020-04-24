@@ -2,6 +2,7 @@ import RandomMath from '../math/RandomMath';
 
 export default class ScreenShaker {
     static shake(shakeIntensity: number = 20) {
+        return;
         const min = shakeIntensity - 2.5;
         const max = shakeIntensity + 2.5;
         const gameWorld = window.GameManager.gameWrapper;

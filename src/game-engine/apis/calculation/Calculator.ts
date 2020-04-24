@@ -1,5 +1,5 @@
-import { Vector2 } from '../game-object-types/Vector2';
-import { getXBoundary, getYBoundary } from '../Boundaries';
+import { Vector2 } from '../../game-object-types/Vector2';
+import { getXBoundary, getYBoundary } from '../boundaries/Boundaries';
 import CalculatorBase from './CalculatorBase';
 
 declare global {
@@ -54,8 +54,8 @@ export default class Calculator extends CalculatorBase {
         return this.queueMessage(sourceEntity);
     }
 
-    determineCrossPoint(
-        maxLifeTime: number,
+    getProjectileTarget(
+        lifeTime: number,
         position: Vector2,
         heading: Vector2,
         movementSpeed: number,
@@ -64,7 +64,7 @@ export default class Calculator extends CalculatorBase {
         this.worker.postMessage({
             sourceEntity,
             action: 'determineCrossPoint',
-            data: { maxLifeTime, position, heading, movementSpeed },
+            data: { lifeTime, position, heading, movementSpeed },
         });
         return this.queueMessage(sourceEntity);
     }

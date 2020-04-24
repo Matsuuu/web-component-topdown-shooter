@@ -1,5 +1,5 @@
 import CalculatorBase from './CalculatorBase';
-import Collider from '../game-object-types/Collider';
+import Collider from '../../game-object-types/Collider';
 
 declare global {
     interface Window {
