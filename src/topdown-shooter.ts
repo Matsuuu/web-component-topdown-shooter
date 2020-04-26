@@ -42,8 +42,6 @@ class TopdownShooter extends LitElement {
                 background-color: #f5edef;
                 background-image: url('https://www.transparenttextures.com/patterns/batthern.png');
                 /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
-                top: 0;
-                left: 0;
                 width: 100%;
                 height: 100%;
             }
@@ -59,27 +57,37 @@ class TopdownShooter extends LitElement {
             </div>
             <game-world
                 .size="${new Vector2(4000, 4000)}"
-                .position="${new Vector2(0, -3000)}"
+                .position="${new Vector2(0, 0)}"
                 .styles="${this.gameWorldStyles()}"
             >
                 <terrain .styles="${this.gameWorldStyles()}"></terrain>
-                <player-element .position="${new Vector2(400, 3500)}"></player-element>
-                <shooter-enemy .position="${new Vector2(400, 3100)}"></shooter-enemy>
-                <shooter-enemy .position="${new Vector2(600, 3120)}"></shooter-enemy>
-                <shooter-enemy .position="${new Vector2(800, 3110)}"></shooter-enemy>
+                <player-element .position="${new Vector2(800, -500)}"></player-element>
+                <shooter-enemy .position="${new Vector2(800, -900)}"></shooter-enemy>
+                <shooter-enemy .position="${new Vector2(550, -850)}"></shooter-enemy>
+                <shooter-enemy .position="${new Vector2(750, -950)}"></shooter-enemy>
 
                 <world-structure
-                    .worldPosition="${new Vector2(300, 3300)}"
+                    .position="${new Vector2(500, -600)}"
                     .size="${new Vector2(50, 100)}"
                 ></world-structure>
 
                 <world-structure
-                    .worldPosition="${new Vector2(200, 3300)}"
+                    .position="${new Vector2(400, -600)}"
                     .size="${new Vector2(50, 100)}"
                 ></world-structure>
 
                 <world-structure
-                    .worldPosition="${new Vector2(300, 3600)}"
+                    .position="${new Vector2(600, -300)}"
+                    .size="${new Vector2(500, 100)}"
+                ></world-structure>
+
+                <world-structure
+                    .position="${new Vector2(1500, -400)}"
+                    .size="${new Vector2(100, 500)}"
+                ></world-structure>
+
+                <world-structure
+                    .position="${new Vector2(1200, -1200)}"
                     .size="${new Vector2(500, 100)}"
                 ></world-structure>
             </game-world>

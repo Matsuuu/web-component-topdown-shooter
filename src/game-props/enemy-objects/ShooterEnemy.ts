@@ -11,7 +11,7 @@ export default class ShooterEnemy extends Enemy {
             css`
                 :host {
                     position: absolute;
-                    top: 0;
+                    bottom: 0;
                     left: 0;
 
                     display: block;

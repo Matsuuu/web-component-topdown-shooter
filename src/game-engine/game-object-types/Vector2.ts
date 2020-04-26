@@ -16,6 +16,10 @@ export class Vector2 {
         );
     }
 
+    equals(other: Vector2) {
+        return other.x === this.x && other.y === this.y;
+    }
+
     reverse(): Vector2 {
         return new Vector2(-this.x, -this.y);
     }

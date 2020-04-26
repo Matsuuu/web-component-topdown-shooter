@@ -24,18 +24,6 @@ onmessage = message => {
                 ),
             });
             break;
-        case 'calculateProjectileLifetime':
-            self.postMessage({
-                sourceEntity: mes.sourceEntity,
-                result: VectorMath.ticksUntilCrossesBorder(
-                    mesData.position,
-                    mesData.heading,
-                    mesData.movementSpeed,
-                    mesData.xBoundary,
-                    mesData.yBoundary,
-                ),
-            } as WorkerResponse);
-            break;
         case 'determineCrossPoint':
             self.postMessage({
                 sourceEntity: mes.sourceEntity,

@@ -10,8 +10,6 @@ import CollisionEvent from '../../game-engine/game-object-types/CollisionEvent';
 export default class Enemy extends LitEntity {
     @property({ type: Number })
     movementSpeed: number;
-    @property({ type: Vector2 })
-    position: Vector2;
     @property({ type: Number })
     health: number;
     @property({ type: Number })
@@ -39,7 +37,6 @@ export default class Enemy extends LitEntity {
     }
 
     tick() {
-        super.tick();
         this.handlePlayerProjectileCollision();
     }
 

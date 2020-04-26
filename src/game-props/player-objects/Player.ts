@@ -19,8 +19,6 @@ class Player extends LitEntity {
     movementDirections: Array<String> = [];
     @property({ type: Number })
     movementSpeed: number;
-    @property({ type: Vector2 })
-    position: Vector2;
     @property({ type: Weapon })
     weapon: Weapon;
     @property({ type: Boolean })
@@ -42,7 +40,7 @@ class Player extends LitEntity {
             css`
                 :host {
                     position: absolute;
-                    top: 0;
+                    bottom: 0;
                     left: 0;
 
                     display: block;
@@ -80,17 +78,17 @@ class Player extends LitEntity {
             this.shooting = false;
         });
         document.addEventListener('mousemove', (e: MouseEvent) => {
-            this.mousePosition = new Vector2(e.x, e.y);
-            this.rotation = VectorMath.lookTowards(
-                this.mousePosition.reduce(window.Camera.getPosition()),
-                this.position,
-            );
+            const mousePosition = new Vector2(e.x, e.y).reverse();
+            const relativeMousePosition = window.Camera.getRelativeMousePosition(mousePosition);
+            this.mousePosition = relativeMousePosition;
+
+            this.rotation = VectorMath.lookTowards(relativeMousePosition, this.position);
             this.setTranslate();
         });
+        window.Camera.follow(this);
     }
 
     tick(): void {
-        super.tick();
         this.handleMovement();
         this.handleShooting();
     }
@@ -117,6 +115,7 @@ class Player extends LitEntity {
         }
 
         // TODO: Check if it's safer to do player collision checks on main thread vs messaging
+        // And fix the glitchy collision check
         if (ColliderMath.isCollidingWithStaticEntity(this.getCollider())) {
             this.position = this.previousPosition;
             this.setTranslate();

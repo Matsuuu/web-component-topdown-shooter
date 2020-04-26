@@ -9,14 +9,16 @@ export default class GameWorld extends LitElement {
     styles;
     @property({ type: Vector2 })
     position = new Vector2(0, 0);
+    @property({ type: Number })
+    worldTransitionSpeed = 0;
 
     static get styles() {
         return css`
             :host {
                 z-index: -1;
                 position: absolute;
-                bottom: 0;
-                left: 0;
+                bottom: 0px;
+                left: 0px;
             }
         `;
     }
@@ -26,19 +28,28 @@ export default class GameWorld extends LitElement {
     }
 
     setPosition(newPosition: Vector2): void {
-        console.log('newPosition', newPosition);
         this.position = newPosition;
+        this.setTransitionSpeed(0);
+        this.updateTransform();
+    }
+
+    updateTransform() {
         this.style.transform = `translate(${this.position.x}px, ${this.position.y}px)`;
         this.render();
     }
 
-    transitionTo(newPosition: Vector2): void {
+    transitionTo(newPosition: Vector2, transitionSpeed: number = 0): void {
+        this.setTransitionSpeed(transitionSpeed);
         this.position = newPosition;
-        this.render();
+        this.updateTransform();
+    }
+
+    setTransitionSpeed(transitionSpeed: number): void {
+        this.worldTransitionSpeed = transitionSpeed;
+        this.style.transition = `${this.worldTransitionSpeed}ms ease-in-out`;
     }
 
     render() {
-        console.log('Gameworld render', this.position);
         return html`
             <style>
                 ${this.styles} :host {

@@ -1,4 +1,4 @@
-import { InitBoundaries } from './apis/boundaries/Boundaries';
+import { getXBoundary, getYBoundary, InitBoundaries } from './apis/boundaries/Boundaries';
 import PerformanceStats, { InitPerformanceStats } from './game-world-elements/PerformanceStats';
 import Calculator from './apis/calculation/Calculator';
 import './game-world-elements/EntityCounter';
@@ -8,6 +8,7 @@ import CollisionCalculator from './apis/calculation/CollisionCalculator';
 import Collider from './game-object-types/Collider';
 import RandomMath from './math/RandomMath';
 import InitCamera, { CameraProperties } from './apis/camera/Camera';
+import { GameEntity } from './interfaces/GameEntity';
 
 const defaults: GameManagerParams = {
     tickRate: 64,
@@ -90,15 +91,19 @@ export default class GameManager {
     }
 
     handleGameTick(): void {
-        this.entities.forEach(entity => {
+        this.getEnabledEntities().forEach(entity => {
             entity.tick();
         });
+    }
+
+    getEnabledEntities(): Array<GameEntity> {
+        return this.entities.filter(ent => ent.enabled);
     }
 
     addGameEntity(entity: GameEntity): number {
         entity.entityId = Date.now() + RandomMath.randomNumber(100, 999);
         this.entities.push(entity);
-        // Return ID for removal purpouses
+        // Return ID for removal purposes
         return entity.entityId;
     }
 
@@ -110,9 +115,12 @@ export default class GameManager {
         this.gameWorld.appendChild(elem);
     }
 
-    addStaticEntity(entity: StaticEntity): void {
+    addStaticEntity(entity: StaticEntity): number {
+        entity.entityId = Date.now() + RandomMath.randomNumber(100, 999);
         this.staticEntities.push(entity);
         this.initStaticEntities();
+        // Return ID for removal purposes
+        return entity.entityId;
     }
 
     getStaticEntities(): Array<StaticEntity> {
@@ -121,5 +129,13 @@ export default class GameManager {
 
     getStaticEntityColliders(): Array<Collider> {
         return this.staticEntities.map(entity => entity.getCollider());
+    }
+
+    getStaticEntityBoundingRects(): Array<DOMRect> {
+        return this.staticEntities.map(entity => entity.getBoundingClientRect());
+    }
+
+    getAllEntities(): Array<GameEntity> {
+        return [...(this.staticEntities as Array<GameEntity>), ...(this.entities as Array<GameEntity>)];
     }
 }

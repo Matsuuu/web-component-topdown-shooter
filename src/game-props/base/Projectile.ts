@@ -4,8 +4,6 @@ import { Vector2 } from '../../game-engine/game-object-types/Vector2';
 import VectorMath from '../../game-engine/math/VectorMath';
 
 export default class Projectile extends LitEntity {
-    @property({ type: Vector2 })
-    position: Vector2;
     @property({ type: Number })
     movementSpeed: number;
     @property({ type: Number })
@@ -31,7 +29,7 @@ export default class Projectile extends LitEntity {
             :host {
                 position: fixed;
                 z-index: 1;
-                top: 0;
+                bottom: 0;
                 left: 0;
                 will-change: transform;
                 transition: ${unsafeCSS(window.GameManager.tickDuration * this.lifeTime)}s linear;
@@ -72,7 +70,6 @@ export default class Projectile extends LitEntity {
     }
 
     tick() {
-        super.tick();
         this.checkCollisionWithStaticEntities();
     }
 

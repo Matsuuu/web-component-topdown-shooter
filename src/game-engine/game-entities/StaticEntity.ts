@@ -1,6 +1,7 @@
 import { css, LitElement, property } from 'lit-element';
 import Collider from '../game-object-types/Collider';
 import { Vector2 } from '../game-object-types/Vector2';
+import { GameEntity } from '../interfaces/GameEntity';
 
 /**
  * Static entities are the building blocks of the world.
@@ -8,18 +9,24 @@ import { Vector2 } from '../game-object-types/Vector2';
  *
  * Static entities are used for structures, walls, etc.
  */
-export default abstract class StaticEntity extends LitElement {
+export default abstract class StaticEntity extends LitElement implements GameEntity {
+    enabled: boolean;
+    entityId: number;
+
     @property({ type: Vector2 })
-    worldPosition: Vector2;
+    position: Vector2;
     @property({ type: Vector2 })
     size: Vector2;
+    @property({ type: DOMRect })
+    boundingRect: DOMRect;
 
     abstract getCollider(): Collider;
 
+    abstract setBoundingRect(): void;
+
     protected firstUpdated(_changedProperties): void {
         setTimeout(() => {
-            console.log(this);
-            window.GameManager.addStaticEntity(this);
+            this.entityId = window.GameManager.addStaticEntity(this);
         });
     }
 
@@ -30,4 +37,7 @@ export default abstract class StaticEntity extends LitElement {
             }
         `;
     }
+
+    // Leave empty
+    tick(): void {}
 }

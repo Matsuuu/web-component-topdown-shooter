@@ -40,20 +40,6 @@ export default class Calculator extends CalculatorBase {
         return this.queueMessage(sourceEntity);
     }
 
-    calculateProjectileLifetime(
-        position: Vector2,
-        heading: Vector2,
-        movementSpeed: number,
-        sourceEntity: number,
-    ): Promise<number> {
-        this.worker.postMessage({
-            sourceEntity,
-            action: 'calculateProjectileLifetime',
-            data: { position, heading, movementSpeed, xBoundary: getXBoundary(), yBoundary: getYBoundary() },
-        });
-        return this.queueMessage(sourceEntity);
-    }
-
     getProjectileTarget(
         lifeTime: number,
         position: Vector2,

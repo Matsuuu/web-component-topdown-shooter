@@ -1,5 +1,5 @@
 import StaticEntity from '../../game-engine/game-entities/StaticEntity';
-import { customElement, html, property } from 'lit-element';
+import { customElement, html } from 'lit-element';
 import Collider from '../../game-engine/game-object-types/Collider';
 
 @customElement('world-structure')
@@ -8,7 +8,12 @@ export default class Structure extends StaticEntity {
 
     protected firstUpdated(_changedProperties): void {
         super.firstUpdated(_changedProperties);
-        this.collider = new Collider(this.shadowRoot.querySelector('.bottom-part').getBoundingClientRect());
+        this.setBoundingRect();
+        this.getCollider();
+    }
+
+    setBoundingRect(): void {
+        this.boundingRect = this.shadowRoot.querySelector('.bottom-part').getBoundingClientRect();
     }
 
     render() {
@@ -17,12 +22,12 @@ export default class Structure extends StaticEntity {
                 :host {
                     display: block;
                     position: absolute;
-                    top: 0;
+                    bottom: 0;
                     left: 0;
 
                     width: ${this.size.x}px;
                     height: ${this.size.y}px;
-                    transform: translate(${this.worldPosition.x}px, ${this.worldPosition.y}px);
+                    transform: translate(${this.position.x}px, ${this.position.y}px);
                     border: 2px solid #000;
                 }
                 .top-part {
@@ -48,6 +53,14 @@ export default class Structure extends StaticEntity {
     }
 
     getCollider(): Collider {
+        let cameraPosition = window.Camera.getPosition();
+        const relativeDomRect = new DOMRect(
+            this.boundingRect.x + cameraPosition.x - 10,
+            this.boundingRect.y + cameraPosition.y - 20,
+            this.size.x,
+            this.size.y,
+        );
+        this.collider = new Collider(relativeDomRect);
         return this.collider;
     }
 }

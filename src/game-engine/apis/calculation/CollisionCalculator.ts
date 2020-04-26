@@ -20,7 +20,7 @@ export default class CollisionCalculator extends CalculatorBase {
     initStaticEntities(): void {
         this.worker.postMessage({
             action: 'staticEntityList',
-            data: { staticEntityColliders: window.GameManager.getStaticEntityColliders() },
+            data: { staticEntityBoundingRects: window.GameManager.getStaticEntityBoundingRects() },
         });
     }
 
@@ -37,7 +37,7 @@ export default class CollisionCalculator extends CalculatorBase {
         this.worker.postMessage({
             sourceEntity,
             action: 'isCollidingWithStaticEntity',
-            data: { source },
+            data: { source, cameraPosition: window.Camera.getPosition() },
         });
         return this.queueMessage(sourceEntity);
     }
