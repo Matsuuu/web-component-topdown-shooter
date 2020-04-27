@@ -1,4 +1,4 @@
-import { css, customElement, html, property } from 'lit-element';
+import { css, customElement, html, property, unsafeCSS } from 'lit-element';
 import './PlayerProjectile';
 import { Vector2 } from '../../game-engine/game-object-types/Vector2';
 import { LitEntity } from '../../game-engine/game-entities/LitEntity';
@@ -49,6 +49,8 @@ class Player extends LitEntity {
                     background: green;
                     border-radius: 2.5px;
 
+                    animation: pump 1s infinite;
+
                     will-change: transform;
                 }
             `,
@@ -85,6 +87,7 @@ class Player extends LitEntity {
             this.rotation = VectorMath.lookTowards(relativeMousePosition, this.position);
             this.setTranslate();
         });
+
         window.Camera.follow(this);
     }
 

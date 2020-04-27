@@ -19,6 +19,7 @@ export default class GameWorld extends LitElement {
                 position: absolute;
                 bottom: 0px;
                 left: 0px;
+                will-change: transform;
             }
         `;
     }
