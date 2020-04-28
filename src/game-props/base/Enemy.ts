@@ -5,6 +5,7 @@ import Projectile from './Projectile';
 import PlayerProjectile from '../player-objects/PlayerProjectile';
 import ColliderMath from '../../game-engine/math/ColliderMath';
 import CollisionEvent from '../../game-engine/game-object-types/CollisionEvent';
+import Player from '../player-objects/Player';
 
 export default class Enemy extends LitEntity {
     @property({ type: Number })
@@ -19,6 +20,13 @@ export default class Enemy extends LitEntity {
     healthBarIsShowing: boolean = false;
     @property({ type: Boolean })
     canBeKnockedBack: boolean = true;
+
+    player: Player;
+
+    init(): void {
+        super.init();
+        this.player = window.GameManager.gameWorld.querySelector('player-element');
+    }
 
     reduceHealth(amount: number): void {
         this.health -= amount;
