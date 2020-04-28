@@ -4,6 +4,7 @@ import ScreenShaker from '../../game-engine/juice/ScreenShaker';
 import RandomMath from '../../game-engine/math/RandomMath';
 import './muzzles/BulletGunMuzzle';
 import { MuzzleTypes } from './muzzles/MuzzleTypes';
+import { LitEntity } from '../../game-engine/game-entities/LitEntity';
 
 export default class SMG extends Weapon {
     damage: number = 1;
@@ -12,9 +13,9 @@ export default class SMG extends Weapon {
     coolDown: number = 60;
     knockBack: number = 2;
 
-    constructor(owner) {
+    constructor(owner: LitEntity) {
         super();
-        this.initMuzzle(owner, MuzzleTypes.BulletGuMuzzle);
+        this.initMuzzle(owner, MuzzleTypes.BulletGunMuzzle);
     }
 
     handleShoot(shooterLocation: Vector2, targetCoords: Vector2, shooterId: number): void {

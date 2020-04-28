@@ -1,7 +1,6 @@
 import GameWorld from '../../game-world-elements/GameWorld';
 import { Vector2 } from '../../game-object-types/Vector2';
 import { LitEntity } from '../../game-entities/LitEntity';
-import { getXBoundary, getYBoundary } from '../boundaries/Boundaries';
 import Culling from '../culling/Culling';
 
 export interface CameraProperties {
@@ -68,7 +67,7 @@ export class Camera {
         }, 90);
     }
 
-    focusOnFollowing() {
+    focusOnFollowing(): void {
         const followingObjectPosition: Vector2 = new Vector2(
             this.following.position.x,
             this.following.position.y,
@@ -93,6 +92,6 @@ export class Camera {
     }
 }
 
-const InitCamera = (props: CameraProperties) => new Camera(props);
+const InitCamera: Function = (props: CameraProperties) => new Camera(props);
 
 export default InitCamera;

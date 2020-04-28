@@ -1,3 +1,3 @@
 export enum MuzzleTypes {
-    BulletGuMuzzle = 'bullet-gun-muzzle',
+    BulletGunMuzzle = 'bullet-gun-muzzle',
 }

@@ -1,12 +1,12 @@
 import { LitEntity } from '../game-entities/LitEntity';
-import { css, customElement, html, property } from 'lit-element';
+import { css, CSSResult, customElement, html, property, TemplateResult } from 'lit-element';
 
 @customElement('entity-counter')
-class EntityCounter extends LitEntity {
+export default class EntityCounter extends LitEntity {
     @property({ type: Number })
     entityCount: number;
 
-    static get styles() {
+    static get styles(): CSSResult {
         return css`
             :host {
                 position: fixed;
@@ -23,15 +23,15 @@ class EntityCounter extends LitEntity {
         `;
     }
 
-    init() {
+    init(): void {
         super.init();
     }
 
-    tick() {
+    tick(): void {
         this.entityCount = window.GameManager.entities.length;
     }
 
-    render() {
+    render(): TemplateResult {
         return html`
             <p>Entity count: ${this.entityCount}</p>
         `;

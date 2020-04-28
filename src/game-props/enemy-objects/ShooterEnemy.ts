@@ -1,11 +1,11 @@
 import Enemy from '../base/Enemy';
-import { css, customElement, html } from 'lit-element';
+import { css, CSSResult, customElement, html, TemplateResult } from 'lit-element';
 import './EnemyHealthBar';
 import normalShadow from '../style-objects/NormalShadow';
 
 @customElement('shooter-enemy')
 export default class ShooterEnemy extends Enemy {
-    static get styles() {
+    static get styles(): Array<CSSResult> {
         return [
             normalShadow,
             css`
@@ -26,19 +26,19 @@ export default class ShooterEnemy extends Enemy {
         ];
     }
 
-    init() {
+    init(): void {
         super.init();
         this.health = this.maxHealth = 30;
     }
 
-    tick() {
+    tick(): void {
         super.tick();
     }
 
-    render() {
+    render(): TemplateResult {
         return html`
             <style>
-                ${this.getDamageFlashStyles()}
+                ${this.getDamageFlashStyles()},
                 ${this.getPositionStyles()}
             </style>
             <enemy-health-bar

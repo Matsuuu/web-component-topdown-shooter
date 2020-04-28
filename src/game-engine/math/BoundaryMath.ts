@@ -1,4 +1,4 @@
-import { Boundary, getWindowSize } from '../apis/boundaries/Boundaries';
+import { getWindowSize } from '../apis/boundaries/Boundaries';
 import { Vector2 } from '../game-object-types/Vector2';
 import Collider from '../game-object-types/Collider';
 
@@ -11,7 +11,7 @@ export default class BoundaryMath {
      * we might want to enable the object a bit before they come into screen
      */
     static isInsideWindow(target: Collider, padding: number = 0): boolean {
-        let windowSize = getWindowSize();
+        const windowSize: Vector2 = getWindowSize();
         return (
             0 - padding < target.center.x === target.center.x < windowSize.x + padding &&
             0 - padding < target.center.y === target.center.y < windowSize.y + padding

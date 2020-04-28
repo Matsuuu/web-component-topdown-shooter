@@ -16,8 +16,8 @@ export abstract class LitEntity extends LitElement implements GameEntity {
         this.waitForGameWorldToInitialize();
     }
 
-    waitForGameWorldToInitialize() {
-        const wait = () => {
+    waitForGameWorldToInitialize(): void {
+        const wait: Function = () => {
             if (!window.GameManager) return setTimeout(() => wait(), 50);
             this.init();
         };

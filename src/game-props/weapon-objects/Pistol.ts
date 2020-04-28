@@ -3,6 +3,7 @@ import { Vector2 } from '../../game-engine/game-object-types/Vector2';
 import ScreenShaker from '../../game-engine/juice/ScreenShaker';
 import './muzzles/BulletGunMuzzle';
 import { MuzzleTypes } from './muzzles/MuzzleTypes';
+import { LitEntity } from '../../game-engine/game-entities/LitEntity';
 
 export default class Pistol extends Weapon {
     damage: number = 1;
@@ -11,9 +12,9 @@ export default class Pistol extends Weapon {
     coolDown: number = 500;
     knockBack: number = 2;
 
-    constructor(owner) {
+    constructor(owner: LitEntity) {
         super();
-        this.initMuzzle(owner, MuzzleTypes.BulletGuMuzzle);
+        this.initMuzzle(owner, MuzzleTypes.BulletGunMuzzle);
     }
 
     handleShoot(shooterLocation: Vector2, targetCoords: Vector2, shooterId: number): void {

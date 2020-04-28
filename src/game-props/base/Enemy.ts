@@ -1,7 +1,6 @@
 import { LitEntity } from '../../game-engine/game-entities/LitEntity';
-import { css, property, unsafeCSS } from 'lit-element';
+import { css, CSSResult, property, PropertyValues, unsafeCSS } from 'lit-element';
 import { Vector2 } from '../../game-engine/game-object-types/Vector2';
-import BoundaryMath from '../../game-engine/math/BoundaryMath';
 import Projectile from './Projectile';
 import PlayerProjectile from '../player-objects/PlayerProjectile';
 import ColliderMath from '../../game-engine/math/ColliderMath';
@@ -15,35 +14,35 @@ export default class Enemy extends LitEntity {
     @property({ type: Number })
     maxHealth: number;
     @property({ type: Function })
-    deathActions;
+    deathActions: Function;
     @property({ type: Boolean })
-    healthBarIsShowing = false;
+    healthBarIsShowing: boolean = false;
     @property({ type: Boolean })
-    canBeKnockedBack = true;
+    canBeKnockedBack: boolean = true;
 
-    reduceHealth(amount: number) {
+    reduceHealth(amount: number): void {
         this.health -= amount;
         if (this.health < 0) {
             this.initiateDeath();
         }
     }
 
-    initiateDeath() {
+    initiateDeath(): void {
         if (this.deathActions) {
-            this.deathActions.call();
+            this.deathActions.call(this);
         }
         this.removeEntity();
         this.remove();
     }
 
-    tick() {
+    tick(): void {
         this.handlePlayerProjectileCollision();
     }
 
     checkPlayerProjectileCollisions(): Array<CollisionEvent> {
-        let collisionEvents: Array<CollisionEvent> = [];
+        const collisionEvents: Array<CollisionEvent> = [];
         this.getPlayerProjectiles().map((proj: PlayerProjectile) => {
-            const collision = ColliderMath.getCollision(proj, this);
+            const collision: CollisionEvent = ColliderMath.getCollision(proj, this);
             if (collision) {
                 collisionEvents.push(collision);
                 proj.removeProjectile();
@@ -53,10 +52,10 @@ export default class Enemy extends LitEntity {
     }
 
     handlePlayerProjectileCollision(): void {
-        let collisionEvents: Array<CollisionEvent> = this.checkPlayerProjectileCollisions();
+        const collisionEvents: Array<CollisionEvent> = this.checkPlayerProjectileCollisions();
         if (collisionEvents.length > 0) {
             collisionEvents.forEach(ev => {
-                const projectile = ev.source as Projectile;
+                const projectile: Projectile = ev.source as Projectile;
                 ev.collisionDirection.add(projectile.heading);
                 this.reduceHealth(projectile.damage);
                 this.handleKnockBack(ev.collisionDirection, projectile.knockBack);
@@ -74,21 +73,20 @@ export default class Enemy extends LitEntity {
         return window.GameManager.entities.filter(ent => ent instanceof PlayerProjectile) as Array<PlayerProjectile>;
     }
 
-    // @ts-ignore
-    protected updated(_changedProperties: keyof T extends PropertyKey ? Map<keyof T, unknown> : never): void {
+    protected updated(_changedProperties: PropertyValues): void {
         if (_changedProperties.has('health')) {
             this.triggerDamageFlash();
         }
     }
 
-    triggerDamageFlash() {
+    triggerDamageFlash(): void {
         this.classList.add('damage-flash');
         setTimeout(() => {
             this.classList.remove('damage-flash');
         }, 50);
     }
 
-    getDamageFlashStyles() {
+    getDamageFlashStyles(): CSSResult {
         return css`
             :host(.damage-flash) {
                 background: darkgrey;
@@ -97,7 +95,7 @@ export default class Enemy extends LitEntity {
         `;
     }
 
-    getPositionStyles() {
+    getPositionStyles(): CSSResult {
         return css`
             :host {
                 transition: 100ms linear transform;

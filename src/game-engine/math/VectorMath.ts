@@ -2,7 +2,7 @@ import { Vector2 } from '../game-object-types/Vector2';
 
 export default class VectorMath {
     static normalize(x: number, y: number, precision: number = 2): Vector2 {
-        const max = Math.max(Math.abs(x), Math.abs(y));
+        const max: number = Math.max(Math.abs(x), Math.abs(y));
         return new Vector2(
             Number.parseFloat((x / max).toFixed(precision)),
             Number.parseFloat((y / max).toFixed(precision)),
@@ -21,7 +21,7 @@ export default class VectorMath {
     }
 
     static determineCrossPoint(lifeTime: number, position: Vector2, heading: Vector2, movementSpeed: number): Vector2 {
-        let crossCoords = { x: null, y: null };
+        const crossCoords: Vector2 = new Vector2(null, null);
         if (heading.y < 0) {
             crossCoords.y = position.y - lifeTime * movementSpeed * Math.abs(heading.y);
         } else {

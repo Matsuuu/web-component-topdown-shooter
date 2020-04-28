@@ -1,12 +1,13 @@
-import { css, customElement, html, LitElement } from 'lit-element';
+import { customElement, html } from 'lit-element';
 import Muzzle from './Muzzle';
+import { TemplateResult } from 'lit-html/lib/template-result';
 
 @customElement('bullet-gun-muzzle')
 export default class BulletGunMuzzle extends Muzzle {
     offsetX: number = 7.5;
     offsetY: number = -7.5;
 
-    render() {
+    render(): TemplateResult {
         return html`
             <style>
                 :host {

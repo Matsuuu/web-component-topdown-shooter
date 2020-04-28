@@ -1,4 +1,5 @@
 import { Vector2 } from './Vector2';
+import { GameEntity } from '../interfaces/GameEntity';
 
 export default class CollisionEvent {
     source: GameEntity;

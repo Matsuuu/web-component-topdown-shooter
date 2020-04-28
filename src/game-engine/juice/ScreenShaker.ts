@@ -3,9 +3,9 @@ import GameWorld from '../game-world-elements/GameWorld';
 import { Vector2 } from '../game-object-types/Vector2';
 
 export default class ScreenShaker {
-    static shake(shakeIntensity: number = 20) {
-        const min = shakeIntensity - 1.5;
-        const max = shakeIntensity + 1.5;
+    static shake(shakeIntensity: number = 20): void {
+        const min: number = shakeIntensity - 1.5;
+        const max: number = shakeIntensity + 1.5;
         const gameWorld: GameWorld = window.Camera.gameWorld;
         const s: Function = () =>
             ScreenShaker.moveScreen(gameWorld, RandomMath.randomNumber(min, max), RandomMath.randomNumber(min, max));
@@ -18,7 +18,7 @@ export default class ScreenShaker {
         }, 30);
     }
 
-    static moveScreen(gameWorld: GameWorld, x: number, y: number) {
+    static moveScreen(gameWorld: GameWorld, x: number, y: number): void {
         window.Camera.setPosition(gameWorld.position.add(new Vector2(x, y)));
     }
 }

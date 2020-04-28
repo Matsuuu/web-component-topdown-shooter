@@ -1,11 +1,12 @@
 import '../math/VectorMath';
 import VectorMath from '../math/VectorMath';
 
-declare var self: Worker;
+declare const self: Worker;
 
-onmessage = message => {
-    const mes = message.data as WorkerMessage;
-    const mesData = mes.data;
+onmessage = (message: MessageEvent): void => {
+    const mes: WorkerMessage = message.data as WorkerMessage;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const mesData: any = mes.data;
 
     switch (mes.action) {
         case 'calculateHeading':

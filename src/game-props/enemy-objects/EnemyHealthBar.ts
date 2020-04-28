@@ -1,21 +1,23 @@
-import { css, customElement, html, LitElement, property, unsafeCSS } from 'lit-element';
+import { css, customElement, html, LitElement, property, TemplateResult, unsafeCSS } from 'lit-element';
+import { PropertyValues } from 'lit-element/lib/updating-element';
+import { CSSResult } from 'lit-element/lib/css-tag';
 
 @customElement('enemy-health-bar')
 export default class EnemyHealthBar extends LitElement {
     @property({ type: Number })
-    maxFill;
+    maxFill: number;
     @property({ type: Number })
-    currentFill;
+    currentFill: number;
     @property({ type: Number })
-    width;
+    width: number;
     @property({ type: Number })
-    parentWidth;
+    parentWidth: number;
     @property({ type: Number })
-    offsetTop;
+    offsetTop: number;
     @property({ type: Object })
     fillObject: HTMLElement;
 
-    static get styles() {
+    static get styles(): CSSResult {
         return css`
             :host {
                 display: block;
@@ -31,26 +33,24 @@ export default class EnemyHealthBar extends LitElement {
         `;
     }
 
-    // @ts-ignore
-    protected firstUpdated(_changedProperties: keyof T extends PropertyKey ? Map<keyof T, unknown> : never): void {
+    protected firstUpdated(): void {
         this.fillObject = this.shadowRoot.querySelector('.fill');
     }
 
-    // @ts-ignore
-    protected updated(_changedProperties: keyof T extends PropertyKey ? Map<keyof T, unknown> : never): void {
+    protected updated(_changedProperties: PropertyValues): void {
         if (_changedProperties.has('currentFill')) {
             this.triggerDamageFlash();
         }
     }
 
-    triggerDamageFlash() {
+    triggerDamageFlash(): void {
         this.fillObject.classList.add('fill--flash');
         setTimeout(() => {
             this.fillObject.classList.remove('fill--flash');
         }, 100);
     }
 
-    render() {
+    render(): TemplateResult {
         return html`
             <style>
                 :host {

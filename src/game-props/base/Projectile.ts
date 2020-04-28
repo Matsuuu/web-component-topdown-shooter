@@ -1,4 +1,4 @@
-import { css, property, unsafeCSS } from 'lit-element';
+import { css, CSSResult, property, unsafeCSS } from 'lit-element';
 import { LitEntity } from '../../game-engine/game-entities/LitEntity';
 import { Vector2 } from '../../game-engine/game-object-types/Vector2';
 import VectorMath from '../../game-engine/math/VectorMath';
@@ -24,7 +24,7 @@ export default class Projectile extends LitEntity {
     @property({ type: Number })
     knockBack: number;
 
-    getProjectileBaseStyles() {
+    getProjectileBaseStyles(): CSSResult {
         return css`
             :host {
                 position: fixed;
@@ -37,12 +37,12 @@ export default class Projectile extends LitEntity {
         `;
     }
 
-    init() {
+    init(): void {
         super.init();
         this.addEventListener('transitionend', () => this.removeProjectile());
     }
 
-    async setProjectileTrajectory() {
+    async setProjectileTrajectory(): Promise<void> {
         this.targetCoordinates = await window.Calculator.getProjectileTarget(
             this.lifeTime,
             this.position,
@@ -60,20 +60,20 @@ export default class Projectile extends LitEntity {
         }, 10);
     }
 
-    firstUpdated() {
+    firstUpdated(): void {
         this.style.transform = `translate(${this.position.x}px, ${this.position.y}px)`;
         this.setProjectileTrajectory();
     }
 
-    setDestinationTransform() {
+    setDestinationTransform(): void {
         this.style.transform = `translate(${this.targetCoordinates.x}px, ${this.targetCoordinates.y}px) rotate(${this.rotation}deg)`;
     }
 
-    tick() {
+    tick(): void {
         this.checkCollisionWithStaticEntities();
     }
 
-    checkCollisionWithStaticEntities() {
+    checkCollisionWithStaticEntities(): void {
         window.CollisionCalculator.isCollidingWithStaticEntity(this.getCollider(), this.entityId).then(isColliding => {
             if (isColliding) {
                 this.removeProjectile();
@@ -81,7 +81,7 @@ export default class Projectile extends LitEntity {
         });
     }
 
-    removeProjectile() {
+    removeProjectile(): void {
         this.removeEntity();
         this.remove();
     }

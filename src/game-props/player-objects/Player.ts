@@ -1,22 +1,19 @@
-import { css, customElement, html, property, unsafeCSS } from 'lit-element';
+import { css, CSSResult, customElement, html, property, TemplateResult } from 'lit-element';
 import './PlayerProjectile';
 import { Vector2 } from '../../game-engine/game-object-types/Vector2';
 import { LitEntity } from '../../game-engine/game-entities/LitEntity';
 import VectorMath from '../../game-engine/math/VectorMath';
 import normalShadow from './../style-objects/NormalShadow';
 import Weapon from '../base/Weapon';
-import Shotgun from '../weapon-objects/Shotgun';
 import ColliderMath from '../../game-engine/math/ColliderMath';
-import Pistol from '../weapon-objects/Pistol';
-import TripleMachineGun from '../weapon-objects/TripleMachineGun';
 import SMG from '../weapon-objects/SMG';
 
-const controlKeys = ['w', 'a', 's', 'd'];
+const controlKeys: Array<string> = ['w', 'a', 's', 'd'];
 
 @customElement('player-element')
-class Player extends LitEntity {
-    @property({ type: Array<String>() })
-    movementDirections: Array<String> = [];
+export default class Player extends LitEntity {
+    @property({ type: Array })
+    movementDirections: Array<string> = [];
     @property({ type: Number })
     movementSpeed: number;
     @property({ type: Weapon })
@@ -34,7 +31,7 @@ class Player extends LitEntity {
 
     previousPosition: Vector2;
 
-    static get styles() {
+    static get styles(): Array<CSSResult> {
         return [
             normalShadow,
             css`
@@ -57,7 +54,7 @@ class Player extends LitEntity {
         ];
     }
 
-    init() {
+    init(): void {
         super.init();
         this.movementDirections = [];
         this.movementSpeed = 200 / window.GameManager.tickRate;
@@ -73,15 +70,15 @@ class Player extends LitEntity {
                 this.movementDirections = this.movementDirections.filter(key => key !== e.key);
             }
         });
-        document.addEventListener('mousedown', (e: MouseEvent) => {
+        document.addEventListener('mousedown', () => {
             this.shooting = true;
         });
-        document.addEventListener('mouseup', (e: MouseEvent) => {
+        document.addEventListener('mouseup', () => {
             this.shooting = false;
         });
         document.addEventListener('mousemove', (e: MouseEvent) => {
-            const mousePosition = new Vector2(e.x, e.y).reverse();
-            const relativeMousePosition = window.Camera.getRelativeMousePosition(mousePosition);
+            const mousePosition: Vector2 = new Vector2(e.x, e.y).reverse();
+            const relativeMousePosition: Vector2 = window.Camera.getRelativeMousePosition(mousePosition);
             this.mousePosition = relativeMousePosition;
 
             this.rotation = VectorMath.lookTowards(relativeMousePosition, this.position);
@@ -125,8 +122,8 @@ class Player extends LitEntity {
             return;
         }
 
-        let xMovement = this.position.x;
-        let yMovement = this.position.y;
+        let xMovement: number = this.position.x;
+        let yMovement: number = this.position.y;
         if (this.movementDirections.includes('w')) {
             yMovement -= this.movementSpeed;
         }
@@ -149,7 +146,7 @@ class Player extends LitEntity {
         this.style.transform = `translate(${this.position.x}px, ${this.position.y}px) rotate(${this.rotation}deg)`;
     }
 
-    render() {
+    render(): TemplateResult {
         return html``;
     }
 }

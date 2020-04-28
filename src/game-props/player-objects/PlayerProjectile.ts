@@ -1,10 +1,11 @@
-import { css, customElement, html } from 'lit-element';
+import { css, CSSResult, customElement, html, TemplateResult } from 'lit-element';
 import Projectile from '../base/Projectile';
 
 @customElement('player-projectile')
 export default class PlayerProjectile extends Projectile {
-    lifeTime = 100;
-    static get styles() {
+    lifeTime: number = 100;
+
+    static get styles(): Array<CSSResult> {
         return [
             css`
                 :host {
@@ -18,7 +19,7 @@ export default class PlayerProjectile extends Projectile {
         ];
     }
 
-    render() {
+    render(): TemplateResult {
         return html`
             <style>
                 ${this.getProjectileBaseStyles()}

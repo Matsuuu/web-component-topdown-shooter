@@ -1,23 +1,24 @@
-import { LitElement, html, customElement, css } from 'lit-element';
+import { LitElement, html, customElement, css, CSSResult, TemplateResult } from 'lit-element';
 import GameManager, { GameManagerParams } from './game-engine/GameManager';
 import './game-props/player-objects/Player';
 import './game-props/enemy-objects/ShooterEnemy';
 import './game-props/world-objects/Structure';
 import { Vector2 } from './game-engine/game-object-types/Vector2';
+import GameWorld from './game-engine/game-world-elements/GameWorld';
 
 @customElement('topdown-shooter')
-class TopdownShooter extends LitElement {
+export default class TopdownShooter extends LitElement {
     constructor() {
         super();
     }
 
     protected firstUpdated(): void {
-        const gameWorld = this.shadowRoot.querySelector('game-world');
-        const gameManager = new GameManager({ gameWrapper: gameWorld, gameWorld } as GameManagerParams);
+        const gameWorld: GameWorld = this.shadowRoot.querySelector('game-world');
+        const gameManager: GameManager = new GameManager({ gameWrapper: gameWorld, gameWorld } as GameManagerParams);
         gameManager.startGame();
     }
 
-    static get styles() {
+    static get styles(): CSSResult {
         return css`
             .instructions {
                 position: absolute;
@@ -35,7 +36,7 @@ class TopdownShooter extends LitElement {
         `;
     }
 
-    gameWorldStyles() {
+    gameWorldStyles(): string {
         return `
             :host {
                 position: absolute;
@@ -48,7 +49,7 @@ class TopdownShooter extends LitElement {
       `;
     }
 
-    render() {
+    render(): TemplateResult {
         return html`
             <entity-counter></entity-counter>
             <div class="instructions">

@@ -1,5 +1,4 @@
 import { Vector2 } from '../../game-object-types/Vector2';
-import { getXBoundary, getYBoundary } from '../boundaries/Boundaries';
 import CalculatorBase from './CalculatorBase';
 
 declare global {

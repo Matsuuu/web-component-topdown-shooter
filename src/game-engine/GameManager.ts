@@ -1,4 +1,4 @@
-import { getXBoundary, getYBoundary, InitBoundaries } from './apis/boundaries/Boundaries';
+import { InitBoundaries } from './apis/boundaries/Boundaries';
 import PerformanceStats, { InitPerformanceStats } from './game-world-elements/PerformanceStats';
 import Calculator from './apis/calculation/Calculator';
 import './game-world-elements/EntityCounter';
@@ -66,25 +66,16 @@ export default class GameManager {
         this.initSingletonHelpers();
     }
 
-    initSingletonHelpers() {
+    initSingletonHelpers(): void {
         new Calculator();
         new CollisionCalculator();
     }
 
-    initStaticEntities() {
+    initStaticEntities(): void {
         window.CollisionCalculator.initStaticEntities();
     }
 
     startGame(): void {
-        /* if (this.showStats) {
-            setInterval(() => {
-                this.handleGameTickWithStats();
-            }, 1000 / this.tickRate);
-        } else {
-            setInterval(() => {
-                this.handleGameTick();
-            }, 1000 / this.tickRate);
-        }*/
         if (this.showStats) {
             this.handleGameTickWithStats();
         } else {
@@ -105,7 +96,7 @@ export default class GameManager {
     }
 
     async handleGameTick(): Promise<void> {
-        const startOfTick = Date.now();
+        const startOfTick: number = Date.now();
 
         this.ticks++;
         this.getEnabledEntities().forEach(entity => {
@@ -113,7 +104,7 @@ export default class GameManager {
         });
         this.spawnQueuedEntities();
 
-        const tickDuration = Date.now() - startOfTick;
+        const tickDuration: number = Date.now() - startOfTick;
         await WaitUtil.wait(this.tickDurationMs - tickDuration);
         this.handleGameTick();
     }
@@ -148,7 +139,7 @@ export default class GameManager {
         if (this.queuedEntities.length < 1) {
             return;
         }
-        const frag = document.createDocumentFragment();
+        const frag: DocumentFragment = document.createDocumentFragment();
         this.queuedEntities.forEach(ent => {
             frag.appendChild(ent);
         });

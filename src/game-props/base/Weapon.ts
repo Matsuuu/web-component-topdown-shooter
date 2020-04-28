@@ -1,6 +1,5 @@
 import { Vector2 } from '../../game-engine/game-object-types/Vector2';
 import PlayerProjectile from '../player-objects/PlayerProjectile';
-import BulletGunMuzzle from '../weapon-objects/muzzles/BulletGunMuzzle';
 import Muzzle from '../weapon-objects/muzzles/Muzzle';
 import { LitEntity } from '../../game-engine/game-entities/LitEntity';
 import { MuzzleTypes } from '../weapon-objects/muzzles/MuzzleTypes';
@@ -17,7 +16,7 @@ export default abstract class Weapon {
     abstract handleShoot(shooterLocation: Vector2, targetCoords: Vector2, shooterId: number): void;
 
     protected spawnProjectile(spawnLocation: Vector2, heading: Vector2): void {
-        const projectile = document.createElement('player-projectile') as PlayerProjectile;
+        const projectile: PlayerProjectile = document.createElement('player-projectile') as PlayerProjectile;
         projectile.position = spawnLocation;
         projectile.movementSpeed = this.projectileSpeed / window.GameManager.tickRate;
         projectile.heading = heading;
@@ -26,7 +25,7 @@ export default abstract class Weapon {
         window.GameManager.spawnEntity(projectile);
     }
 
-    protected adjustShooterLocation(shooterLocation: Vector2, heading: Vector2, adjustAmount: number = 20) {
+    protected adjustShooterLocation(shooterLocation: Vector2, heading: Vector2, adjustAmount: number = 20): Vector2 {
         shooterLocation.x += heading.x * adjustAmount;
         shooterLocation.y += heading.y * adjustAmount;
         return shooterLocation;
@@ -36,18 +35,22 @@ export default abstract class Weapon {
         setTimeout(() => (this.canShoot = true), this.coolDown);
     }
 
-    protected getProjectileHeading(shooterLocation: Vector2, targetCoords: Vector2, shooterId: number) {
+    protected getProjectileHeading(
+        shooterLocation: Vector2,
+        targetCoords: Vector2,
+        shooterId: number,
+    ): Promise<Vector2> {
         return window.Calculator.calculateHeading(shooterLocation, targetCoords, shooterId);
     }
 
-    protected handleMuzzle() {
+    protected handleMuzzle(): void {
         this.muzzle.classList.add('flash');
         setTimeout(() => {
             this.muzzle.classList.remove('flash');
         }, 100);
     }
 
-    protected initMuzzle(owner: LitEntity, muzzleType: MuzzleTypes) {
+    protected initMuzzle(owner: LitEntity, muzzleType: MuzzleTypes): void {
         this.muzzle = document.createElement(muzzleType) as Muzzle;
         owner.shadowRoot.appendChild(this.muzzle);
     }

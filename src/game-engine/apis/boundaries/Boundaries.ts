@@ -22,7 +22,7 @@ class Boundaries {
     }
 
     getRelativeXBoundary(): Boundary {
-        const offsetX = window.Camera.getPosition().x;
+        const offsetX: number = window.Camera.getPosition().x;
         return {
             min: this.xBoundary.min - offsetX,
             max: this.xBoundary.max - offsetX,
@@ -30,7 +30,7 @@ class Boundaries {
     }
 
     getRelativeYBoundary(): Boundary {
-        const offsetY = window.Camera.getPosition().y;
+        const offsetY: number = window.Camera.getPosition().y;
         return {
             min: (this.yBoundary.min + offsetY) * -1,
             max: (this.yBoundary.max + offsetY) * -1,
@@ -38,7 +38,7 @@ class Boundaries {
     }
 }
 
-export const getXBoundary = (): Boundary => Boundaries._instance.getRelativeXBoundary();
-export const getYBoundary = (): Boundary => Boundaries._instance.getRelativeYBoundary();
-export const getWindowSize = (): Vector2 => Boundaries._instance.windowSize;
-export const InitBoundaries = (): Boundaries => new Boundaries();
+export const getXBoundary: Function = (): Boundary => Boundaries._instance.getRelativeXBoundary();
+export const getYBoundary: Function = (): Boundary => Boundaries._instance.getRelativeYBoundary();
+export const getWindowSize: Function = (): Vector2 => Boundaries._instance.windowSize;
+export const InitBoundaries: Function = (): Boundaries => new Boundaries();

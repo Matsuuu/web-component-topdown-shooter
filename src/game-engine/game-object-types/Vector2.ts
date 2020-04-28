@@ -4,19 +4,19 @@ export class Vector2 {
     x: number;
     y: number;
 
-    constructor(x, y) {
+    constructor(x: number, y: number) {
         this.x = x;
         this.y = y;
     }
 
-    static random() {
+    static random(): Vector2 {
         return new Vector2(
-            RandomMath.randomBetweenOneAndMinusOne().toFixed(2),
-            RandomMath.randomBetweenOneAndMinusOne().toFixed(2),
+            Number.parseInt(RandomMath.randomBetweenOneAndMinusOne().toFixed(2)),
+            Number.parseInt(RandomMath.randomBetweenOneAndMinusOne().toFixed(2)),
         );
     }
 
-    equals(other: Vector2) {
+    equals(other: Vector2): boolean {
         return other.x === this.x && other.y === this.y;
     }
 

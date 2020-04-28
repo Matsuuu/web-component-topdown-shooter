@@ -1,12 +1,14 @@
 import StaticEntity from '../../game-engine/game-entities/StaticEntity';
-import { customElement, html } from 'lit-element';
+import { customElement, html, TemplateResult } from 'lit-element';
 import Collider from '../../game-engine/game-object-types/Collider';
+import { PropertyValues } from 'lit-element/lib/updating-element';
+import { Vector2 } from '../../game-engine/game-object-types/Vector2';
 
 @customElement('world-structure')
 export default class Structure extends StaticEntity {
     collider: Collider;
 
-    protected firstUpdated(_changedProperties): void {
+    protected firstUpdated(_changedProperties: PropertyValues): void {
         super.firstUpdated(_changedProperties);
         this.setBoundingRect();
         this.getCollider();
@@ -16,7 +18,7 @@ export default class Structure extends StaticEntity {
         this.boundingRect = this.shadowRoot.querySelector('.bottom-part').getBoundingClientRect();
     }
 
-    render() {
+    render(): TemplateResult {
         return html`
             <style>
                 :host {
@@ -53,8 +55,8 @@ export default class Structure extends StaticEntity {
     }
 
     getCollider(): Collider {
-        let cameraPosition = window.Camera.getPosition();
-        const relativeDomRect = new DOMRect(
+        const cameraPosition: Vector2 = window.Camera.getPosition();
+        const relativeDomRect: DOMRect = new DOMRect(
             this.boundingRect.x + cameraPosition.x - 10,
             this.boundingRect.y + cameraPosition.y - 20,
             this.size.x,

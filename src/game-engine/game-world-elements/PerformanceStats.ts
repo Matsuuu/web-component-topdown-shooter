@@ -22,4 +22,4 @@ export default class PerformanceStats {
     }
 }
 
-export const InitPerformanceStats = (): PerformanceStats => new PerformanceStats();
+export const InitPerformanceStats: Function = (): PerformanceStats => new PerformanceStats();

@@ -1,4 +1,4 @@
-import { css, LitElement, property } from 'lit-element';
+import { css, CSSResult, LitElement, property } from 'lit-element';
 import Collider from '../game-object-types/Collider';
 import { Vector2 } from '../game-object-types/Vector2';
 import { GameEntity } from '../interfaces/GameEntity';
@@ -24,13 +24,13 @@ export default abstract class StaticEntity extends LitElement implements GameEnt
 
     abstract setBoundingRect(): void;
 
-    protected firstUpdated(_changedProperties): void {
+    protected firstUpdated(): void {
         setTimeout(() => {
             this.entityId = window.GameManager.addStaticEntity(this);
         });
     }
 
-    getShadows() {
+    getShadows(): CSSResult {
         return css`
             :host {
                 box-shadow: 37.5px 13.5px 1px -11.5px #48484866;
@@ -39,5 +39,7 @@ export default abstract class StaticEntity extends LitElement implements GameEnt
     }
 
     // Leave empty
-    tick(): void {}
+    tick(): void {
+        //
+    }
 }
