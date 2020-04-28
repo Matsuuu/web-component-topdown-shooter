@@ -38,7 +38,7 @@ export default class ShooterEnemy extends Enemy {
     render(): TemplateResult {
         return html`
             <style>
-                ${this.getDamageFlashStyles()},
+                ${this.getDamageFlashStyles()}
                 ${this.getPositionStyles()}
             </style>
             <enemy-health-bar
