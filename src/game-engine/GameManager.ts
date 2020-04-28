@@ -9,6 +9,7 @@ import Collider from './game-object-types/Collider';
 import RandomMath from './math/RandomMath';
 import InitCamera, { CameraProperties } from './apis/camera/Camera';
 import { GameEntity } from './interfaces/GameEntity';
+import WaitUtil from './apis/wait/WaitUtil';
 
 const defaults: GameManagerParams = {
     tickRate: 64,
@@ -35,9 +36,12 @@ export default class GameManager {
     staticEntities: Array<StaticEntity>;
     tickRate: number;
     tickDuration: number;
+    tickDurationMs: number;
     gameWrapper: HTMLElement;
     gameWorld: ShadowRoot | HTMLElement;
     showStats: boolean;
+    ticks: number = 0;
+    queuedEntities: Array<HTMLElement> = [];
 
     constructor(params?: GameManagerParams) {
         if (!params) {
@@ -46,6 +50,7 @@ export default class GameManager {
 
         this.tickRate = params.tickRate || defaults.tickRate;
         this.tickDuration = 1 / this.tickRate;
+        this.tickDurationMs = 1000 / this.tickRate;
         this.gameWrapper = params.gameWrapper || defaults.gameWrapper;
         this.gameWorld = params.gameWorld || defaults.gameWorld;
         this.showStats = params.showStats || defaults.showStats;
@@ -71,7 +76,7 @@ export default class GameManager {
     }
 
     startGame(): void {
-        if (this.showStats) {
+        /* if (this.showStats) {
             setInterval(() => {
                 this.handleGameTickWithStats();
             }, 1000 / this.tickRate);
@@ -79,21 +84,38 @@ export default class GameManager {
             setInterval(() => {
                 this.handleGameTick();
             }, 1000 / this.tickRate);
+        }*/
+        if (this.showStats) {
+            this.handleGameTickWithStats();
+        } else {
+            this.handleGameTick();
         }
     }
 
-    handleGameTickWithStats(): void {
+    async handleGameTickWithStats(): Promise<void> {
         PerformanceStats.begin();
+        this.ticks++;
         this.entities.forEach(entity => {
             entity.tick();
         });
+        this.spawnQueuedEntities();
         PerformanceStats.end();
+        await WaitUtil.wait(this.tickDurationMs);
+        this.handleGameTickWithStats();
     }
 
-    handleGameTick(): void {
+    async handleGameTick(): Promise<void> {
+        const startOfTick = Date.now();
+
+        this.ticks++;
         this.getEnabledEntities().forEach(entity => {
             entity.tick();
         });
+        this.spawnQueuedEntities();
+
+        const tickDuration = Date.now() - startOfTick;
+        await WaitUtil.wait(this.tickDurationMs - tickDuration);
+        this.handleGameTick();
     }
 
     getEnabledEntities(): Array<GameEntity> {
@@ -111,8 +133,27 @@ export default class GameManager {
         this.entities = this.entities.filter(ent => ent.entityId !== id);
     }
 
-    spawnEntity(elem: HTMLElement) {
-        this.gameWorld.appendChild(elem);
+    /**
+     * Queue entity for spawning. Spawning is done in one sweep to reduce DOM load
+     * @param elem
+     */
+    spawnEntity(elem: HTMLElement): void {
+        this.queuedEntities.push(elem);
+    }
+
+    /**
+     * Spawn items queued by the spawnEntity method
+     */
+    spawnQueuedEntities(): void {
+        if (this.queuedEntities.length < 1) {
+            return;
+        }
+        const frag = document.createDocumentFragment();
+        this.queuedEntities.forEach(ent => {
+            frag.appendChild(ent);
+        });
+        this.queuedEntities = [];
+        this.gameWorld.appendChild(frag);
     }
 
     addStaticEntity(entity: StaticEntity): number {

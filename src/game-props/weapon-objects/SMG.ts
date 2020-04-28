@@ -9,7 +9,7 @@ export default class SMG extends Weapon {
     damage: number = 1;
     projectileCount: number = 1;
     projectileSpeed: number = 600;
-    coolDown: number = 100;
+    coolDown: number = 60;
     knockBack: number = 2;
 
     constructor(owner) {

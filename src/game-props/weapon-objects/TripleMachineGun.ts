@@ -5,7 +5,7 @@ import { MuzzleTypes } from './muzzles/MuzzleTypes';
 import './muzzles/BulletGunMuzzle';
 
 export default class TripleMachineGun extends Weapon {
-    coolDown: number = 50;
+    coolDown: number = 100;
     damage: number = 0.3;
     projectileCount: number = 3;
     projectileSpeed: number = 800;
