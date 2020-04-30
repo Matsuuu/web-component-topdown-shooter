@@ -10,12 +10,14 @@ import RandomMath from './math/RandomMath';
 import InitCamera, { CameraProperties } from './apis/camera/Camera';
 import { GameEntity } from './interfaces/GameEntity';
 import WaitUtil from './apis/wait/WaitUtil';
+import './game-world-elements/DebugOptions';
 
 const defaults: GameManagerParams = {
     tickRate: 64,
     gameWorld: document.body,
     gameWrapper: document.body,
     showStats: false,
+    debug: false,
 };
 
 declare global {
@@ -29,6 +31,7 @@ export interface GameManagerParams {
     gameWorld: ShadowRoot | HTMLElement;
     tickRate?: number;
     showStats?: boolean;
+    debug?: boolean;
 }
 
 export default class GameManager {
@@ -40,6 +43,7 @@ export default class GameManager {
     gameWrapper: HTMLElement;
     gameWorld: ShadowRoot | HTMLElement;
     showStats: boolean;
+    debug: boolean;
     ticks: number = 0;
     queuedEntities: Array<HTMLElement> = [];
 
@@ -54,6 +58,7 @@ export default class GameManager {
         this.gameWrapper = params.gameWrapper || defaults.gameWrapper;
         this.gameWorld = params.gameWorld || defaults.gameWorld;
         this.showStats = params.showStats || defaults.showStats;
+        this.debug = params.debug || false;
         this.entities = [];
         this.staticEntities = [];
 
@@ -63,7 +68,13 @@ export default class GameManager {
             InitPerformanceStats();
         }
         window.GameManager = this;
+        this.initDebugOptions();
         this.initSingletonHelpers();
+    }
+
+    initDebugOptions(): void {
+        const debugOptions: HTMLElement = document.createElement('debug-options');
+        document.body.appendChild(debugOptions);
     }
 
     initSingletonHelpers(): void {

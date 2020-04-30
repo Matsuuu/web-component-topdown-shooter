@@ -64,7 +64,7 @@ export class Camera {
         this.following = entity;
         this.followingInterval = setInterval(() => {
             this.focusOnFollowing();
-        }, 90);
+        }, this.gameWorld.worldTransitionSpeed * 0.9);
     }
 
     focusOnFollowing(): void {

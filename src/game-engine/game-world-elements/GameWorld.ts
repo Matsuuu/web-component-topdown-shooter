@@ -47,7 +47,7 @@ export default class GameWorld extends LitElement {
 
     setTransitionSpeed(transitionSpeed: number): void {
         this.worldTransitionSpeed = transitionSpeed;
-        this.style.transition = `${this.worldTransitionSpeed}ms ease-in-out`;
+        this.style.transition = `${this.worldTransitionSpeed}ms linear`;
     }
 
     render(): TemplateResult {
