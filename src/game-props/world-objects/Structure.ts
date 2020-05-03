@@ -55,14 +55,6 @@ export default class Structure extends StaticEntity {
     }
 
     getCollider(): Collider {
-        const cameraPosition: Vector2 = window.Camera.getPosition();
-        const relativeDomRect: DOMRect = new DOMRect(
-            this.boundingRect.x + cameraPosition.x - 10,
-            this.boundingRect.y + cameraPosition.y - 20,
-            this.size.x,
-            this.size.y,
-        );
-        this.collider = new Collider(relativeDomRect);
-        return this.collider;
+        return new Collider(this.shadowRoot.querySelector('.bottom-part').getBoundingClientRect());
     }
 }

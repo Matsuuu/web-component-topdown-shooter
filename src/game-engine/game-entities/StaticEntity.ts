@@ -2,6 +2,7 @@ import { css, CSSResult, LitElement, property } from 'lit-element';
 import Collider from '../game-object-types/Collider';
 import { Vector2 } from '../game-object-types/Vector2';
 import { GameEntity } from '../interfaces/GameEntity';
+import { PropertyValues } from 'lit-element/lib/updating-element';
 
 /**
  * Static entities are the building blocks of the world.
@@ -24,7 +25,7 @@ export default abstract class StaticEntity extends LitElement implements GameEnt
 
     abstract setBoundingRect(): void;
 
-    protected firstUpdated(): void {
+    protected firstUpdated(_changedProperties: PropertyValues): void {
         setTimeout(() => {
             this.entityId = window.GameManager.addStaticEntity(this);
         });

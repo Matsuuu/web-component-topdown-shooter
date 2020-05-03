@@ -1,16 +1,26 @@
 import { css, CSSResult, customElement, html, LitElement, property, PropertyValues, TemplateResult } from 'lit-element';
 import WaitUtil from '../apis/wait/WaitUtil';
 
+declare global {
+    interface Window {
+        DebugOptions: DebugOptions;
+    }
+}
+
 export interface DebugSettings {
     showEntityCount: boolean;
+    showColliders: boolean;
 }
 
 const defaultDebugSettings: DebugSettings = {
     showEntityCount: true,
+    showColliders: false,
 };
 
 // eslint-disable-next-line @typescript-eslint/no-inferrable-types
 const debugSettingsKey: string = 'debugSettings';
+// eslint-disable-next-line @typescript-eslint/no-inferrable-types
+export const debugSettingsChangedEvent: string = 'debugSettingChanged';
 
 @customElement('debug-options')
 export default class DebugOptions extends LitElement {
@@ -19,12 +29,15 @@ export default class DebugOptions extends LitElement {
     @property({ type: Object })
     debugSettings: DebugSettings;
 
-    protected firstUpdated(_changedProperties: PropertyValues): void {
+    constructor() {
+        super();
+
         const debugSettings: DebugSettings = JSON.parse(localStorage.getItem(debugSettingsKey));
         if (!debugSettings) {
             localStorage.setItem(debugSettingsKey, JSON.stringify(defaultDebugSettings));
         }
         this.debugSettings = debugSettings;
+        window.DebugOptions = this;
     }
 
     async toggleDebugOptions(): Promise<void> {
@@ -32,14 +45,18 @@ export default class DebugOptions extends LitElement {
         this.isOpen = !this.isOpen;
     }
 
+    getOption(opt: string) {
+        return this.debugSettings[opt];
+    }
+
     toggleOption(e: Event): void {
         const target: HTMLInputElement = e.target as HTMLInputElement;
         const id: string = target.id;
         const newValue: boolean = target.checked;
-        console.log({ id, newValue });
 
         this.debugSettings[id] = newValue;
         localStorage.setItem(debugSettingsKey, JSON.stringify(this.debugSettings));
+        window.dispatchEvent(new CustomEvent(debugSettingsChangedEvent, { detail: { key: id, value: newValue } }));
     }
 
     render(): TemplateResult {
@@ -60,6 +77,15 @@ export default class DebugOptions extends LitElement {
                                   id="showEntityCount"
                                   @change="${this.toggleOption}"
                                   ?checked="${this.debugSettings['showEntityCount']}"
+                              />
+                          </div>
+                          <div class="debug-options-list">
+                              <p>Show Colliders</p>
+                              <input
+                                  type="checkbox"
+                                  id="showColliders"
+                                  @change="${this.toggleOption}"
+                                  ?checked="${this.debugSettings['showColliders']}"
                               />
                           </div>
                       `

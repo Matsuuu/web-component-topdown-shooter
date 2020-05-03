@@ -52,7 +52,7 @@ export default class ColliderMath {
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         let isColliding: boolean = false;
         if (!staticEntityColliders) {
-            staticEntityColliders = window.GameManager.getStaticEntities().map(entity => entity.getCollider());
+            staticEntityColliders = window.GameManager.getStaticEntityColliders();
         }
         for (const entityCollider of staticEntityColliders) {
             if (ColliderMath.isColliding(source, entityCollider)) {

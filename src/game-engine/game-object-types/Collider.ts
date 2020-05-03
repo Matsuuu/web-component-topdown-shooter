@@ -1,6 +1,8 @@
 import { Vector2 } from './Vector2';
 
 export default class Collider {
+    drawCollider: boolean = false;
+
     left: number;
     right: number;
     top: number;
@@ -19,5 +21,9 @@ export default class Collider {
         this.height = domRect.height;
         this.localCenter = new Vector2(domRect.width / 2, domRect.height / 2);
         this.center = new Vector2(this.left + this.localCenter.x, this.top + this.localCenter.y);
+    }
+
+    toggleColliderDrawing(on: boolean): void {
+        this.drawCollider = on;
     }
 }

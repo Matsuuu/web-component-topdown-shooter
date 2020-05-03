@@ -11,6 +11,7 @@ import InitCamera, { CameraProperties } from './apis/camera/Camera';
 import { GameEntity } from './interfaces/GameEntity';
 import WaitUtil from './apis/wait/WaitUtil';
 import './game-world-elements/DebugOptions';
+import './game-world-elements/DebugOverlay';
 
 const defaults: GameManagerParams = {
     tickRate: 64,
@@ -75,6 +76,8 @@ export default class GameManager {
     initDebugOptions(): void {
         const debugOptions: HTMLElement = document.createElement('debug-options');
         document.body.appendChild(debugOptions);
+        const debugOverlay: HTMLElement = document.createElement('debug-overlay');
+        document.body.appendChild(debugOverlay);
     }
 
     initSingletonHelpers(): void {

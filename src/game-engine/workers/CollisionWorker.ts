@@ -4,18 +4,10 @@ import Collider from '../game-object-types/Collider';
 
 declare const self: Worker;
 
-let staticEntityBoundingRects: Array<DOMRect> = [];
+let staticEntityColliders: Array<Collider> = [];
 
-const getStaticEntityColliders: Function = (cameraPosition: Vector2): Array<Collider> => {
-    return staticEntityBoundingRects.map(boundingRect => {
-        const relativeDomRect: DOMRect = new DOMRect(
-            boundingRect.x + cameraPosition.x - 10,
-            boundingRect.y + cameraPosition.y - 20,
-            boundingRect.width,
-            boundingRect.height,
-        );
-        return new Collider(relativeDomRect);
-    });
+const getStaticEntityColliders: Function = (): Array<Collider> => {
+    return staticEntityColliders;
 };
 
 onmessage = (message: MessageEvent): void => {
@@ -33,14 +25,11 @@ onmessage = (message: MessageEvent): void => {
         case 'isCollidingWithStaticEntity':
             self.postMessage({
                 sourceEntity: mes.sourceEntity,
-                result: ColliderMath.isCollidingWithStaticEntity(
-                    mesData.source,
-                    getStaticEntityColliders(mesData.cameraPosition as Vector2),
-                ),
+                result: ColliderMath.isCollidingWithStaticEntity(mesData.source, getStaticEntityColliders()),
             } as WorkerResponse);
             break;
         case 'staticEntityList':
-            staticEntityBoundingRects = mesData.staticEntityBoundingRects;
+            staticEntityColliders = mesData.staticEntityColliders;
             break;
     }
 };

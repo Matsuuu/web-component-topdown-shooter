@@ -15,12 +15,15 @@ export default class CollisionCalculator extends CalculatorBase {
         this.createWorker();
         window.CollisionCalculator = this;
         this.initStaticEntities();
+        setTimeout(() => {
+            this.initStaticEntities();
+        }, 1000);
     }
 
     initStaticEntities(): void {
         this.worker.postMessage({
             action: 'staticEntityList',
-            data: { staticEntityBoundingRects: window.GameManager.getStaticEntityBoundingRects() },
+            data: { staticEntityColliders: window.GameManager.getStaticEntityColliders() },
         });
     }
 
@@ -37,7 +40,7 @@ export default class CollisionCalculator extends CalculatorBase {
         this.worker.postMessage({
             sourceEntity,
             action: 'isCollidingWithStaticEntity',
-            data: { source, cameraPosition: window.Camera.getPosition() },
+            data: { source },
         });
         return this.queueMessage(sourceEntity);
     }

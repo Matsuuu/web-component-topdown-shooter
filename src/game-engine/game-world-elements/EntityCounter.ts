@@ -1,5 +1,6 @@
 import { LitEntity } from '../game-entities/LitEntity';
 import { css, CSSResult, customElement, html, property, TemplateResult } from 'lit-element';
+import { debugSettingsChangedEvent } from './DebugOptions';
 
 @customElement('entity-counter')
 export default class EntityCounter extends LitEntity {
@@ -25,6 +26,12 @@ export default class EntityCounter extends LitEntity {
 
     init(): void {
         super.init();
+        window.addEventListener(debugSettingsChangedEvent, (e: CustomEvent) => {
+            if (e.detail.key === 'showEntityCount') {
+                this.enabled = e.detail.value;
+                this.requestUpdate();
+            }
+        });
     }
 
     tick(): void {
@@ -33,6 +40,11 @@ export default class EntityCounter extends LitEntity {
 
     render(): TemplateResult {
         return html`
+            <style>
+                :host {
+                    display: ${this.enabled ? 'block' : 'none'};
+                }
+            </style>
             <p>Entity count: ${this.entityCount}</p>
         `;
     }
