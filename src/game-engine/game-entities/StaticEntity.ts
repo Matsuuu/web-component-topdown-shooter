@@ -13,6 +13,7 @@ import { PropertyValues } from 'lit-element/lib/updating-element';
 export default abstract class StaticEntity extends LitElement implements GameEntity {
     enabled: boolean;
     entityId: number;
+    collider: Collider;
 
     @property({ type: Vector2 })
     position: Vector2;
@@ -22,7 +23,16 @@ export default abstract class StaticEntity extends LitElement implements GameEnt
     size: Vector2;
 
     async getCollider(): Promise<Collider> {
-        return new Collider(this.position, new Vector2(this.offsetWidth, this.offsetHeight), this.rotation);
+        if (!this.collider) {
+            const size: Vector2 = new Vector2(this.clientWidth, this.clientHeight);
+            this.collider = await window.CollisionCalculator.getCollider(
+                this.position,
+                size,
+                this.rotation,
+                this.entityId,
+            );
+        }
+        return this.collider;
     }
 
     protected firstUpdated(_changedProperties: PropertyValues): void {

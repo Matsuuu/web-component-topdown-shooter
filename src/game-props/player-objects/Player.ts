@@ -138,7 +138,7 @@ export default class Player extends LitEntity {
             xMovement += this.movementSpeed;
         }
 
-        this.previousPosition = { ...this.position } as Vector2;
+        this.previousPosition = this.position.copy();
         this.position = new Vector2(xMovement, yMovement);
         this.setTranslate();
     }

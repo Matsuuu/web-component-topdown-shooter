@@ -18,12 +18,11 @@ export default class TopdownShooter extends LitElement {
         const gameManager: GameManager = new GameManager({ gameWrapper: gameWorld, gameWorld } as GameManagerParams);
         gameManager.startGame();
 
-        const testElem: Structure = this.shadowRoot.querySelector('#test');
-        /*window.addEventListener('keydown', () => {
-            console.log(testElem.position);
-            console.log(testElem.getCollider());
-            testElem.rotation += 5;
-        });*/
+        // Just to set faster from console
+        window.setTest = (x, y) =>
+            ((this.shadowRoot.querySelector(
+                '#test-elem',
+            ) as HTMLElement).style.transform = `translate(${x}px, ${y}px)`);
     }
 
     static get styles(): CSSResult {
@@ -84,7 +83,7 @@ export default class TopdownShooter extends LitElement {
                     id="test"
                     .position="${new Vector2(400, -600)}"
                     .size="${new Vector2(50, 100)}"
-                    rotation="30"
+                    rotation="0"
                 ></world-structure>
 
                 <world-structure
@@ -101,6 +100,18 @@ export default class TopdownShooter extends LitElement {
                     .position="${new Vector2(1200, -1200)}"
                     .size="${new Vector2(500, 100)}"
                 ></world-structure>
+                <div
+                    id="test-elem"
+                    style="
+                    width:5px;
+                    height:5px;
+                    border-radius:25%;
+                    background:red;
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    transform: translate(0px, 0px);"
+                ></div>
             </game-world>
         `;
     }

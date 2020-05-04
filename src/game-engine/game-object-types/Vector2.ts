@@ -17,6 +17,9 @@ export class Vector2 {
     }
 
     equals(other: Vector2): boolean {
+        if (!other) {
+            return false;
+        }
         return other.x === this.x && other.y === this.y;
     }
 

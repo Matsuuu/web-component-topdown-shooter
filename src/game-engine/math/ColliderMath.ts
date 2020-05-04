@@ -5,18 +5,9 @@ import { LitEntity } from '../game-entities/LitEntity';
 
 export default class ColliderMath {
     static isColliding(source: Collider, target: Collider, circleCollision: boolean = false): boolean {
-        if (circleCollision) {
-            return ColliderMath.isCircleColliding(source, target);
-        }
         if (!source || !target) {
             return false;
         }
-        /*return (
-            source.left < target.right &&
-            source.right > target.left &&
-            source.top < target.bottom &&
-            source.bottom > target.top
-        );*/
         const col1x: number = source.topLeft.x - target.bottomRight.x;
         const col1y: number = source.topLeft.y - target.bottomRight.y;
         const col2x: number = target.topLeft.x - source.bottomRight.x;
@@ -43,15 +34,6 @@ export default class ColliderMath {
             return new CollisionEvent(source, target, collisionDirection);
         }
         return null;
-    }
-
-    /**
-     * TODO: implement this
-     * @param source
-     * @param target
-     */
-    static isCircleColliding(source: Collider, target: Collider): boolean {
-        return source != null && target != null;
     }
 
     /**

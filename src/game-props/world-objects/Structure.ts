@@ -10,6 +10,10 @@ export default class Structure extends StaticEntity {
     protected firstUpdated(_changedProperties: PropertyValues): void {
         super.firstUpdated(_changedProperties);
         this.getCollider();
+        this.addEventListener('click', () => {
+            console.log(new Vector2(this.offsetWidth, this.offsetHeight));
+            this.getCollider().then(collider => console.log(collider));
+        });
     }
 
     render(): TemplateResult {
@@ -50,11 +54,9 @@ export default class Structure extends StaticEntity {
 
     async getCollider(): Promise<Collider> {
         if (!this.collider) {
-            console.log('Setting collider', this);
-            const bottomPart: HTMLElement = this.shadowRoot.querySelector('.bottom-part');
             this.collider = new Collider(
                 this.position,
-                new Vector2(bottomPart.offsetWidth, bottomPart.offsetHeight),
+                new Vector2(this.offsetWidth, this.offsetHeight),
                 this.rotation,
             );
         }

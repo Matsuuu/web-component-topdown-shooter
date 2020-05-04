@@ -18,7 +18,7 @@ export default class DebugOverlay extends LitElement {
                 bottom: 0;
                 left: 0;
                 position: absolute;
-                z-index: ;
+                pointer-events: none;
             }
         `;
     }
@@ -70,10 +70,10 @@ export default class DebugOverlay extends LitElement {
                 }
 
                 const points: Array<Vector2> = [
-                    new Vector2(col.topLeft.x, col.topLeft.y + gameWorldSize.y - col.height),
-                    new Vector2(col.topRight.x, col.topRight.y + gameWorldSize.y - col.height),
-                    new Vector2(col.bottomRight.x, col.bottomRight.y + gameWorldSize.y - col.height),
-                    new Vector2(col.bottomLeft.x, col.bottomLeft.y + gameWorldSize.y - col.height),
+                    new Vector2(col.topLeft.x, col.topLeft.y + gameWorldSize.y),
+                    new Vector2(col.topRight.x, col.topRight.y + gameWorldSize.y),
+                    new Vector2(col.bottomRight.x, col.bottomRight.y + gameWorldSize.y),
+                    new Vector2(col.bottomLeft.x, col.bottomLeft.y + gameWorldSize.y),
                 ];
 
                 // I mean. Who would want SVG Polygon creation to be easy and fun...
