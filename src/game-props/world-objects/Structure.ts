@@ -7,15 +7,9 @@ import { Vector2 } from '../../game-engine/game-object-types/Vector2';
 @customElement('world-structure')
 export default class Structure extends StaticEntity {
     collider: Collider;
-
     protected firstUpdated(_changedProperties: PropertyValues): void {
         super.firstUpdated(_changedProperties);
-        this.setBoundingRect();
         this.getCollider();
-    }
-
-    setBoundingRect(): void {
-        this.boundingRect = this.shadowRoot.querySelector('.bottom-part').getBoundingClientRect();
     }
 
     render(): TemplateResult {
@@ -29,7 +23,7 @@ export default class Structure extends StaticEntity {
 
                     width: ${this.size.x}px;
                     height: ${this.size.y}px;
-                    transform: translate(${this.position.x}px, ${this.position.y}px);
+                    transform: translate(${this.position.x}px, ${this.position.y}px) rotate(${this.rotation}deg);
                     border: 2px solid #000;
                 }
                 .top-part {
@@ -54,7 +48,16 @@ export default class Structure extends StaticEntity {
         `;
     }
 
-    getCollider(): Collider {
-        return new Collider(this.shadowRoot.querySelector('.bottom-part').getBoundingClientRect());
+    async getCollider(): Promise<Collider> {
+        if (!this.collider) {
+            console.log('Setting collider', this);
+            const bottomPart: HTMLElement = this.shadowRoot.querySelector('.bottom-part');
+            this.collider = new Collider(
+                this.position,
+                new Vector2(bottomPart.offsetWidth, bottomPart.offsetHeight),
+                this.rotation,
+            );
+        }
+        return this.collider;
     }
 }

@@ -1,5 +1,6 @@
 import { Vector2 } from '../../game-object-types/Vector2';
 import CalculatorBase from './CalculatorBase';
+import Collider from '../../game-object-types/Collider';
 
 declare global {
     interface Window {
@@ -25,16 +26,19 @@ export default class Calculator extends CalculatorBase {
         return this.queueMessage(sourceEntity);
     }
 
-    calculateNextPosition(
+    calculateNextColliderPosition(
         currentPosition: Vector2,
         heading: Vector2,
         movementSpeed: number,
+        size: Vector2,
+        rotation: number,
+        lifetimeElapsed: number,
         sourceEntity: number,
-    ): Promise<Vector2> {
+    ): Promise<Collider> {
         this.worker.postMessage({
             sourceEntity,
-            action: 'calculateNextPosition',
-            data: { currentPosition, heading, movementSpeed },
+            action: 'calculateNextColliderPosition',
+            data: { currentPosition, heading, movementSpeed, size, rotation, lifetimeElapsed },
         });
         return this.queueMessage(sourceEntity);
     }

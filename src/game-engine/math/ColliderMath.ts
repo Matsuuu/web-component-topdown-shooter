@@ -8,17 +8,31 @@ export default class ColliderMath {
         if (circleCollision) {
             return ColliderMath.isCircleColliding(source, target);
         }
-        return (
+        if (!source || !target) {
+            return false;
+        }
+        /*return (
             source.left < target.right &&
             source.right > target.left &&
             source.top < target.bottom &&
             source.bottom > target.top
-        );
+        );*/
+        const col1x: number = source.topLeft.x - target.bottomRight.x;
+        const col1y: number = source.topLeft.y - target.bottomRight.y;
+        const col2x: number = target.topLeft.x - source.bottomRight.x;
+        const col2y: number = target.topLeft.y - source.bottomRight.y;
+        if (col1x > 0 || col1y > 0) {
+            return false;
+        }
+        if (col2x > 0 || col2y > 0) {
+            return false;
+        }
+        return true;
     }
 
-    static getCollision(source: LitEntity, target: LitEntity): CollisionEvent {
-        const sourceCollider: Collider = source.getCollider();
-        const targetCollider: Collider = target.getCollider();
+    static async getCollision(source: LitEntity, target: LitEntity): Promise<CollisionEvent> {
+        const sourceCollider: Collider = await source.getCollider();
+        const targetCollider: Collider = await target.getCollider();
 
         if (ColliderMath.isColliding(sourceCollider, targetCollider)) {
             const higherX: number = Math.max(sourceCollider.center.x, targetCollider.center.x);
@@ -48,18 +62,36 @@ export default class ColliderMath {
      * @param source
      * @param staticEntityColliders
      */
-    static isCollidingWithStaticEntity(source: Collider, staticEntityColliders?: Array<Collider>): boolean {
+    static async isCollidingWithStaticEntity(
+        source: Collider,
+        staticEntityColliders?: Array<Promise<Collider>>,
+    ): Promise<boolean> {
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         let isColliding: boolean = false;
         if (!staticEntityColliders) {
             staticEntityColliders = window.GameManager.getStaticEntityColliders();
         }
         for (const entityCollider of staticEntityColliders) {
-            if (ColliderMath.isColliding(source, entityCollider)) {
+            if (ColliderMath.isColliding(source, await entityCollider)) {
                 isColliding = true;
                 break;
             }
         }
         return isColliding;
+    }
+
+    static calculateNextColliderPosition(
+        currentPosition: Vector2,
+        heading: Vector2,
+        movementSpeed: number,
+        size: Vector2,
+        rotation: number,
+        lifetimeElapsed: number,
+    ): Collider {
+        lifetimeElapsed = lifetimeElapsed - 2;
+        const positionX: number = currentPosition.x + lifetimeElapsed * heading.x * movementSpeed;
+        const positionY: number = currentPosition.y + lifetimeElapsed * heading.y * movementSpeed;
+        const position: Vector2 = new Vector2(positionX, positionY);
+        return new Collider(position, size, rotation);
     }
 }

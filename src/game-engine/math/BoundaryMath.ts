@@ -12,6 +12,7 @@ export default class BoundaryMath {
      */
     static isInsideWindow(target: Collider, padding: number = 0): boolean {
         const windowSize: Vector2 = getWindowSize();
+        return true;
         return (
             0 - padding < target.center.x === target.center.x < windowSize.x + padding &&
             0 - padding < target.center.y === target.center.y < windowSize.y + padding

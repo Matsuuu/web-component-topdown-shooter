@@ -5,6 +5,7 @@ import './game-props/enemy-objects/ShooterEnemy';
 import './game-props/world-objects/Structure';
 import { Vector2 } from './game-engine/game-object-types/Vector2';
 import GameWorld from './game-engine/game-world-elements/GameWorld';
+import Structure from './game-props/world-objects/Structure';
 
 @customElement('topdown-shooter')
 export default class TopdownShooter extends LitElement {
@@ -16,6 +17,13 @@ export default class TopdownShooter extends LitElement {
         const gameWorld: GameWorld = this.shadowRoot.querySelector('game-world');
         const gameManager: GameManager = new GameManager({ gameWrapper: gameWorld, gameWorld } as GameManagerParams);
         gameManager.startGame();
+
+        const testElem: Structure = this.shadowRoot.querySelector('#test');
+        /*window.addEventListener('keydown', () => {
+            console.log(testElem.position);
+            console.log(testElem.getCollider());
+            testElem.rotation += 5;
+        });*/
     }
 
     static get styles(): CSSResult {
@@ -73,8 +81,10 @@ export default class TopdownShooter extends LitElement {
                 ></world-structure>
 
                 <world-structure
+                    id="test"
                     .position="${new Vector2(400, -600)}"
                     .size="${new Vector2(50, 100)}"
+                    rotation="30"
                 ></world-structure>
 
                 <world-structure

@@ -5,6 +5,8 @@ export interface GameEntity {
     entityId: number;
     enabled: boolean;
     position: Vector2;
+    rotation: number;
+
     tick(): void;
-    getCollider(): Collider;
+    getCollider(): Promise<Collider>;
 }

@@ -2,8 +2,12 @@ import { css, CSSResult, property, unsafeCSS } from 'lit-element';
 import { LitEntity } from '../../game-engine/game-entities/LitEntity';
 import { Vector2 } from '../../game-engine/game-object-types/Vector2';
 import VectorMath from '../../game-engine/math/VectorMath';
+import Collider from '../../game-engine/game-object-types/Collider';
+import WaitUtil from '../../game-engine/apis/wait/WaitUtil';
+import Calculator from '../../game-engine/apis/calculation/Calculator';
 
 export default class Projectile extends LitEntity {
+    collider: Collider;
     @property({ type: Number })
     movementSpeed: number;
     @property({ type: Number })
@@ -19,6 +23,7 @@ export default class Projectile extends LitEntity {
      */
     @property({ type: Number })
     lifeTime: number = 1;
+    lifeTimeElapsed: number = 0;
     @property({ type: Number })
     rotation: number;
     @property({ type: Number })
@@ -32,7 +37,7 @@ export default class Projectile extends LitEntity {
                 bottom: 0;
                 left: 0;
                 will-change: transform;
-                transition: ${unsafeCSS(window.GameManager.tickDuration * this.lifeTime)}s linear;
+                transition: 0;
             }
         `;
     }
@@ -50,9 +55,11 @@ export default class Projectile extends LitEntity {
             this.movementSpeed,
             this.entityId,
         );
-
         this.rotation = VectorMath.lookTowards(this.targetCoordinates, this.position);
         this.style.transform = `translate(${this.position.x}px, ${this.position.y}px) rotate(${this.rotation}deg)`;
+
+        await WaitUtil.wait(50);
+        this.style.transition = `${unsafeCSS(window.GameManager.tickDuration * this.lifeTime)}s linear`;
 
         // This is a absolutely disgusting hack but I'll live with it
         setTimeout(() => {
@@ -61,7 +68,6 @@ export default class Projectile extends LitEntity {
     }
 
     firstUpdated(): void {
-        this.style.transform = `translate(${this.position.x}px, ${this.position.y}px)`;
         this.setProjectileTrajectory();
     }
 
@@ -71,13 +77,34 @@ export default class Projectile extends LitEntity {
 
     tick(): void {
         this.checkCollisionWithStaticEntities();
+        this.lifeTimeElapsed++;
+    }
+
+    async getCollider(): Promise<Collider> {
+        return this.collider;
+    }
+
+    getNextPositionCollider(): Promise<Collider> {
+        const size: Vector2 = new Vector2(this.clientWidth, this.clientHeight);
+        return window.Calculator.calculateNextColliderPosition(
+            this.position,
+            this.heading,
+            this.movementSpeed,
+            size,
+            this.rotation,
+            this.lifeTimeElapsed,
+            this.entityId,
+        );
     }
 
     checkCollisionWithStaticEntities(): void {
-        window.CollisionCalculator.isCollidingWithStaticEntity(this.getCollider(), this.entityId).then(isColliding => {
-            if (isColliding) {
-                this.removeProjectile();
-            }
+        this.getNextPositionCollider().then((collider: Collider) => {
+            this.collider = collider;
+            window.CollisionCalculator.isCollidingWithStaticEntity(collider, this.entityId).then(isColliding => {
+                if (isColliding) {
+                    this.removeProjectile();
+                }
+            });
         });
     }
 

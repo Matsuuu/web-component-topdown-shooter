@@ -1,5 +1,6 @@
 import CalculatorBase from './CalculatorBase';
 import Collider from '../../game-object-types/Collider';
+import { Vector2 } from '../../game-object-types/Vector2';
 
 declare global {
     interface Window {
@@ -21,9 +22,11 @@ export default class CollisionCalculator extends CalculatorBase {
     }
 
     initStaticEntities(): void {
-        this.worker.postMessage({
-            action: 'staticEntityList',
-            data: { staticEntityColliders: window.GameManager.getStaticEntityColliders() },
+        Promise.all(window.GameManager.getStaticEntityColliders()).then((staticEntityColliders: Array<Collider>) => {
+            this.worker.postMessage({
+                action: 'staticEntityList',
+                data: { staticEntityColliders },
+            });
         });
     }
 
@@ -41,6 +44,15 @@ export default class CollisionCalculator extends CalculatorBase {
             sourceEntity,
             action: 'isCollidingWithStaticEntity',
             data: { source },
+        });
+        return this.queueMessage(sourceEntity);
+    }
+
+    getCollider(position: Vector2, size: Vector2, rotation: number, sourceEntity: number): Promise<Collider> {
+        this.worker.postMessage({
+            sourceEntity,
+            action: 'getCollider',
+            data: { position, size, rotation },
         });
         return this.queueMessage(sourceEntity);
     }

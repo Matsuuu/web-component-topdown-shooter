@@ -6,8 +6,8 @@ export default class Culling {
         if (!allEntities) {
             allEntities = window.GameManager.getAllEntities();
         }
-        allEntities.map(entity => {
-            entity.enabled = BoundaryMath.isInsideWindow(entity.getCollider(), 150);
+        allEntities.map(async entity => {
+            entity.enabled = BoundaryMath.isInsideWindow(await entity.getCollider(), 150);
         });
     }
 }

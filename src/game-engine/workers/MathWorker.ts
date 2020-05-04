@@ -1,5 +1,6 @@
 import '../math/VectorMath';
 import VectorMath from '../math/VectorMath';
+import ColliderMath from '../math/ColliderMath';
 
 declare const self: Worker;
 
@@ -15,13 +16,16 @@ onmessage = (message: MessageEvent): void => {
                 result: VectorMath.calculateHeading(mesData.source, mesData.target),
             } as WorkerResponse);
             break;
-        case 'calculateNextPosition':
+        case 'calculateNextColliderPosition':
             self.postMessage({
                 sourceEntity: mes.sourceEntity,
-                result: VectorMath.calculateNextPosition(
+                result: ColliderMath.calculateNextColliderPosition(
                     mesData.currentPosition,
                     mesData.heading,
                     mesData.movementSpeed,
+                    mesData.size,
+                    mesData.rotation,
+                    mesData.lifetimeElapsed,
                 ),
             });
             break;

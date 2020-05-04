@@ -16,14 +16,14 @@ export default abstract class StaticEntity extends LitElement implements GameEnt
 
     @property({ type: Vector2 })
     position: Vector2;
+    @property({ type: Number })
+    rotation: number = 0;
     @property({ type: Vector2 })
     size: Vector2;
-    @property({ type: DOMRect })
-    boundingRect: DOMRect;
 
-    abstract getCollider(): Collider;
-
-    abstract setBoundingRect(): void;
+    async getCollider(): Promise<Collider> {
+        return new Collider(this.position, new Vector2(this.offsetWidth, this.offsetHeight), this.rotation);
+    }
 
     protected firstUpdated(_changedProperties: PropertyValues): void {
         setTimeout(() => {

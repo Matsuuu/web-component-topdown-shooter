@@ -10,6 +10,8 @@ export abstract class LitEntity extends LitElement implements GameEntity {
     entityId: number;
     @property({ type: Vector2 })
     position: Vector2 = new Vector2(0, 0);
+    @property({ type: Number })
+    rotation: number = 0;
 
     constructor() {
         super();
@@ -36,7 +38,8 @@ export abstract class LitEntity extends LitElement implements GameEntity {
         window.GameManager.removeGameEntity(this.entityId);
     }
 
-    getCollider(): Collider {
-        return new Collider(this.getBoundingClientRect());
+    getCollider(): Promise<Collider> {
+        const size: Vector2 = new Vector2(this.clientWidth, this.clientHeight);
+        return window.CollisionCalculator.getCollider(this.position, size, this.rotation, this.entityId);
     }
 }

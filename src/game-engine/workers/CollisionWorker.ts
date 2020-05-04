@@ -23,13 +23,21 @@ onmessage = (message: MessageEvent): void => {
             } as WorkerResponse);
             break;
         case 'isCollidingWithStaticEntity':
-            self.postMessage({
-                sourceEntity: mes.sourceEntity,
-                result: ColliderMath.isCollidingWithStaticEntity(mesData.source, getStaticEntityColliders()),
-            } as WorkerResponse);
+            ColliderMath.isCollidingWithStaticEntity(mesData.source, getStaticEntityColliders()).then(result => {
+                self.postMessage({
+                    sourceEntity: mes.sourceEntity,
+                    result,
+                } as WorkerResponse);
+            });
             break;
         case 'staticEntityList':
             staticEntityColliders = mesData.staticEntityColliders;
+            break;
+        case 'getCollider':
+            self.postMessage({
+                sourceEntity: mes.sourceEntity,
+                result: new Collider(mesData.position, mesData.size, mesData.rotation),
+            });
             break;
     }
 };

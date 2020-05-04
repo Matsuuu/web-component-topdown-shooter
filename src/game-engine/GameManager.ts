@@ -12,10 +12,11 @@ import { GameEntity } from './interfaces/GameEntity';
 import WaitUtil from './apis/wait/WaitUtil';
 import './game-world-elements/DebugOptions';
 import './game-world-elements/DebugOverlay';
+import GameWorld from './game-world-elements/GameWorld';
 
 const defaults: GameManagerParams = {
     tickRate: 64,
-    gameWorld: document.body,
+    gameWorld: null,
     gameWrapper: document.body,
     showStats: false,
     debug: false,
@@ -29,7 +30,7 @@ declare global {
 
 export interface GameManagerParams {
     gameWrapper: HTMLElement;
-    gameWorld: ShadowRoot | HTMLElement;
+    gameWorld: GameWorld;
     tickRate?: number;
     showStats?: boolean;
     debug?: boolean;
@@ -42,7 +43,7 @@ export default class GameManager {
     tickDuration: number;
     tickDurationMs: number;
     gameWrapper: HTMLElement;
-    gameWorld: ShadowRoot | HTMLElement;
+    gameWorld: GameWorld;
     showStats: boolean;
     debug: boolean;
     ticks: number = 0;
@@ -57,7 +58,7 @@ export default class GameManager {
         this.tickDuration = 1 / this.tickRate;
         this.tickDurationMs = 1000 / this.tickRate;
         this.gameWrapper = params.gameWrapper || defaults.gameWrapper;
-        this.gameWorld = params.gameWorld || defaults.gameWorld;
+        this.gameWorld = (params.gameWorld as GameWorld) || defaults.gameWorld;
         this.showStats = params.showStats || defaults.showStats;
         this.debug = params.debug || false;
         this.entities = [];
@@ -77,7 +78,7 @@ export default class GameManager {
         const debugOptions: HTMLElement = document.createElement('debug-options');
         document.body.appendChild(debugOptions);
         const debugOverlay: HTMLElement = document.createElement('debug-overlay');
-        document.body.appendChild(debugOverlay);
+        this.gameWrapper.appendChild(debugOverlay);
     }
 
     initSingletonHelpers(): void {
@@ -173,7 +174,7 @@ export default class GameManager {
         return this.staticEntities;
     }
 
-    getStaticEntityColliders(): Array<Collider> {
+    getStaticEntityColliders(): Array<Promise<Collider>> {
         return this.staticEntities.map(entity => entity.getCollider());
     }
 

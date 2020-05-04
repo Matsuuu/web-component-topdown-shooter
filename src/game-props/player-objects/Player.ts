@@ -7,6 +7,7 @@ import normalShadow from './../style-objects/NormalShadow';
 import Weapon from '../base/Weapon';
 import ColliderMath from '../../game-engine/math/ColliderMath';
 import SMG from '../weapon-objects/SMG';
+import Collider from '../../game-engine/game-object-types/Collider';
 
 const controlKeys: Array<string> = ['w', 'a', 's', 'd'];
 
@@ -22,8 +23,6 @@ export default class Player extends LitEntity {
     shooting: boolean = false;
     @property({ type: Vector2 })
     mousePosition: Vector2 = new Vector2(0, 0);
-    @property({ type: Number })
-    rotation: number = 0;
 
     // Update if player size is changed
     // Used to center projcetile send location
@@ -109,14 +108,15 @@ export default class Player extends LitEntity {
         }
     }
 
-    handleMovement(): void {
+    async handleMovement(): Promise<void> {
         if (this.movementDirections.length < 1) {
             return;
         }
 
         // TODO: Check if it's safer to do player collision checks on main thread vs messaging
         // And fix the glitchy collision check
-        if (ColliderMath.isCollidingWithStaticEntity(this.getCollider())) {
+        const collider: Collider = await this.getCollider();
+        if (await ColliderMath.isCollidingWithStaticEntity(collider)) {
             this.position = this.previousPosition;
             this.setTranslate();
             return;

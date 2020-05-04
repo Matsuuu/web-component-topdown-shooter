@@ -47,20 +47,24 @@ export default class Enemy extends LitEntity {
         this.handlePlayerProjectileCollision();
     }
 
-    checkPlayerProjectileCollisions(): Array<CollisionEvent> {
+    async checkPlayerProjectileCollisions(): Promise<Array<CollisionEvent>> {
         const collisionEvents: Array<CollisionEvent> = [];
-        this.getPlayerProjectiles().map((proj: PlayerProjectile) => {
-            const collision: CollisionEvent = ColliderMath.getCollision(proj, this);
-            if (collision) {
-                collisionEvents.push(collision);
-                proj.removeProjectile();
-            }
-        });
+
+        const collisionEventPromises: Array<Promise<void>> = this.getPlayerProjectiles().map(
+            async (proj: PlayerProjectile) => {
+                const collision: CollisionEvent = await ColliderMath.getCollision(proj, this);
+                if (collision) {
+                    collisionEvents.push(collision);
+                    proj.removeProjectile();
+                }
+            },
+        );
+        await Promise.all(collisionEventPromises);
         return collisionEvents;
     }
 
-    handlePlayerProjectileCollision(): void {
-        const collisionEvents: Array<CollisionEvent> = this.checkPlayerProjectileCollisions();
+    async handlePlayerProjectileCollision(): Promise<void> {
+        const collisionEvents: Array<CollisionEvent> = await this.checkPlayerProjectileCollisions();
         if (collisionEvents.length > 0) {
             collisionEvents.forEach(ev => {
                 const projectile: Projectile = ev.source as Projectile;

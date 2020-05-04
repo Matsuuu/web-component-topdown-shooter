@@ -2,7 +2,7 @@ import { css, CSSResult, customElement, html, LitElement, property } from 'lit-e
 import Collider from '../game-object-types/Collider';
 import { Vector2 } from '../game-object-types/Vector2';
 import { GameEntity } from '../interfaces/GameEntity';
-import DebugOptions, { debugSettingsChangedEvent } from './DebugOptions';
+import { debugSettingsChangedEvent } from './DebugOptions';
 
 @customElement('debug-overlay')
 export default class DebugOverlay extends LitElement {
@@ -17,8 +17,8 @@ export default class DebugOverlay extends LitElement {
                 width: 100%;
                 bottom: 0;
                 left: 0;
-                position: fixed;
-                z-index: -1;
+                position: absolute;
+                z-index: ;
             }
         `;
     }
@@ -31,6 +31,11 @@ export default class DebugOverlay extends LitElement {
         window.addEventListener(debugSettingsChangedEvent, (e: CustomEvent) => {
             if (e.detail.key === 'showColliders') {
                 this.toggleShowColliders(e.detail.value);
+            }
+        });
+        window.addEventListener('keydown', (e: KeyboardEvent) => {
+            if (e.key === 't') {
+                this.updateColliders();
             }
         });
         setTimeout(() => {
@@ -49,40 +54,49 @@ export default class DebugOverlay extends LitElement {
             }, window.GameManager.tickDurationMs);
         } else {
             clearTimeout(this.showCollidersInterval);
-            this.shadowRoot.querySelector('#colliders').innerHTML = '';
+            this.emptyColliderSvg();
         }
     }
 
     drawColliders(entities: Array<GameEntity>): void {
         const elem: SVGSVGElement = this.shadowRoot.querySelector('#colliders');
-        elem.innerHTML = '';
+        const gameWorldSize: Vector2 = window.GameManager.gameWorld.size;
         const frag: DocumentFragment = document.createDocumentFragment();
-        entities.map(ent => {
-            const col: Collider = ent.getCollider();
-            if (!col) {
-                return;
-            }
-            const points: Array<Vector2> = [
-                new Vector2(col.left, col.top),
-                new Vector2(col.right, col.top),
-                new Vector2(col.right, col.bottom),
-                new Vector2(col.left, col.bottom),
-            ];
+        const colliderPromises: Array<Promise<Collider>> = entities.map(ent => ent.getCollider());
+        Promise.all(colliderPromises).then((colliders: Array<Collider>) => {
+            colliders.map(col => {
+                if (!col) {
+                    return;
+                }
 
-            // I mean. Who would want SVG Polygon creation to be easy and fun...
-            const poly: SVGPolygonElement = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-            points.forEach(point => {
-                const svgPoint: DOMPoint = elem.createSVGPoint(); // Why can't this just take params.
-                svgPoint.x = point.x;
-                svgPoint.y = point.y;
-                poly.points.appendItem(svgPoint);
+                const points: Array<Vector2> = [
+                    new Vector2(col.topLeft.x, col.topLeft.y + gameWorldSize.y - col.height),
+                    new Vector2(col.topRight.x, col.topRight.y + gameWorldSize.y - col.height),
+                    new Vector2(col.bottomRight.x, col.bottomRight.y + gameWorldSize.y - col.height),
+                    new Vector2(col.bottomLeft.x, col.bottomLeft.y + gameWorldSize.y - col.height),
+                ];
+
+                // I mean. Who would want SVG Polygon creation to be easy and fun...
+                const poly: SVGPolygonElement = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+                points.forEach(point => {
+                    const svgPoint: DOMPoint = elem.createSVGPoint(); // Why can't this just take params.
+                    svgPoint.x = point.x;
+                    svgPoint.y = point.y;
+                    poly.points.appendItem(svgPoint);
+                });
+                poly.style.fill = 'rgba(0, 255, 0, 0.3)';
+                poly.style.stroke = 'purple';
+                poly.style.strokeWidth = '1';
+                frag.appendChild(poly);
             });
-            poly.style.fill = 'rgba(0, 255, 0, 0.3)';
-            poly.style.stroke = 'purple';
-            poly.style.strokeWidth = '1';
-            frag.appendChild(poly);
+            this.emptyColliderSvg();
+
+            elem.appendChild(frag);
         });
-        elem.appendChild(frag);
+    }
+
+    emptyColliderSvg(): void {
+        this.shadowRoot.querySelector('#colliders').innerHTML = '';
     }
 
     render() {
