@@ -35,6 +35,7 @@ export default class EntityCounter extends LitEntity {
     }
 
     tick(): void {
+        super.tick();
         this.entityCount = window.GameManager.entities.length;
     }
 

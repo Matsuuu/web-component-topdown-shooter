@@ -88,6 +88,7 @@ export default class Player extends LitEntity {
     }
 
     tick(): void {
+        super.tick();
         this.handleMovement();
         this.handleShooting();
     }

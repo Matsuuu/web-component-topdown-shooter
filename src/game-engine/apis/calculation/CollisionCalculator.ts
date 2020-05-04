@@ -21,8 +21,9 @@ export default class CollisionCalculator extends CalculatorBase {
         }, 1000);
     }
 
-    initStaticEntities(): void {
-        Promise.all(window.GameManager.getStaticEntityColliders()).then((staticEntityColliders: Array<Collider>) => {
+    async initStaticEntities(): Promise<void> {
+        const staticEntityColliderPromises: Array<Promise<Collider>> = window.GameManager.getStaticEntityColliders();
+        Promise.all(staticEntityColliderPromises).then((staticEntityColliders: Array<Collider>) => {
             this.worker.postMessage({
                 action: 'staticEntityList',
                 data: { staticEntityColliders },

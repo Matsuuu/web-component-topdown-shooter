@@ -44,6 +44,7 @@ export default class Enemy extends LitEntity {
     }
 
     tick(): void {
+        super.tick();
         this.handlePlayerProjectileCollision();
     }
 

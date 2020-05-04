@@ -88,7 +88,6 @@ export default class ColliderMath {
         rotation: number,
         lifetimeElapsed: number,
     ): Collider {
-        lifetimeElapsed = lifetimeElapsed - 2;
         const positionX: number = currentPosition.x + lifetimeElapsed * heading.x * movementSpeed;
         const positionY: number = currentPosition.y + lifetimeElapsed * heading.y * movementSpeed;
         const position: Vector2 = new Vector2(positionX, positionY);

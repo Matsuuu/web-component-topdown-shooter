@@ -76,6 +76,7 @@ export default class Projectile extends LitEntity {
     }
 
     tick(): void {
+        super.tick();
         this.checkCollisionWithStaticEntities();
         this.lifeTimeElapsed++;
     }
@@ -97,14 +98,12 @@ export default class Projectile extends LitEntity {
         );
     }
 
-    checkCollisionWithStaticEntities(): void {
-        this.getNextPositionCollider().then((collider: Collider) => {
-            this.collider = collider;
-            window.CollisionCalculator.isCollidingWithStaticEntity(collider, this.entityId).then(isColliding => {
-                if (isColliding) {
-                    this.removeProjectile();
-                }
-            });
+    async checkCollisionWithStaticEntities(): Promise<void> {
+        this.collider = await this.getNextPositionCollider();
+        window.CollisionCalculator.isCollidingWithStaticEntity(this.collider, this.entityId).then(isColliding => {
+            if (isColliding) {
+                this.removeProjectile();
+            }
         });
     }
 
