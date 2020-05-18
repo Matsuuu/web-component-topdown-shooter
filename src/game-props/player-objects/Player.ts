@@ -1,13 +1,13 @@
 import { css, CSSResult, customElement, html, property, TemplateResult } from 'lit-element';
 import './PlayerProjectile';
 import { Vector2 } from '../../game-engine/game-object-types/Vector2';
-import { LitEntity } from '../../game-engine/game-entities/LitEntity';
 import VectorMath from '../../game-engine/math/VectorMath';
 import normalShadow from './../style-objects/NormalShadow';
 import Weapon from '../base/Weapon';
 import ColliderMath from '../../game-engine/math/ColliderMath';
 import SMG from '../weapon-objects/SMG';
 import Collider from '../../game-engine/game-object-types/Collider';
+import { LitEntity } from '../../game-engine/game-entities/LitEntity';
 
 const controlKeys: Array<string> = ['w', 'a', 's', 'd'];
 

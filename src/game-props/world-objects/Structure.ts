@@ -13,6 +13,9 @@ export default class Structure extends StaticEntity {
         this.addEventListener('click', () => {
             console.log(new Vector2(this.offsetWidth, this.offsetHeight));
             this.getCollider().then(collider => console.log(collider));
+            this.rotation += 10;
+            this.collider = null;
+            this.getCollider();
         });
     }
 

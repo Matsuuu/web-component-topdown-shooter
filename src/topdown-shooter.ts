@@ -5,7 +5,6 @@ import './game-props/enemy-objects/ShooterEnemy';
 import './game-props/world-objects/Structure';
 import { Vector2 } from './game-engine/game-object-types/Vector2';
 import GameWorld from './game-engine/game-world-elements/GameWorld';
-import Structure from './game-props/world-objects/Structure';
 
 @customElement('topdown-shooter')
 export default class TopdownShooter extends LitElement {
@@ -83,7 +82,7 @@ export default class TopdownShooter extends LitElement {
                     id="test"
                     .position="${new Vector2(400, -600)}"
                     .size="${new Vector2(50, 100)}"
-                    rotation="0"
+                    rotation="10"
                 ></world-structure>
 
                 <world-structure

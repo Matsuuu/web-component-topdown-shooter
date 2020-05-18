@@ -28,19 +28,25 @@ export default class Collider {
     }
 
     getRelativeCoords(position: Vector2, size: Vector2, rotation: number): Vector2 {
+        const relativePos: Vector2 = new Vector2(position.x, position.y - size.y);
         if (rotation !== 0) {
-            return this.getRotatedCorner(position, size, rotation);
+            return this.getRotatedCorner(relativePos, size, rotation);
         }
-        return new Vector2(position.x, position.y - size.y);
+        return relativePos;
     }
 
     getRotatedCorner(position: Vector2, size: Vector2, rotation: number): Vector2 {
-        const tempX: number = position.x - this.center.x;
-        const tempY: number = position.y - this.center.y;
+        const angle: number = (rotation * Math.PI) / 180;
 
-        const rotatedX: number = tempX * Math.cos(rotation) - tempY * Math.sin(rotation);
-        const rotatedY: number = tempX * Math.sin(rotation) + tempY * Math.cos(rotation);
+        const rotatedX: number =
+            Math.cos(angle) * (position.x - this.center.x) -
+            Math.sin(angle) * (position.y - this.center.y) +
+            this.center.x;
+        const rotatedY: number =
+            Math.sin(angle) * (position.x - this.center.x) +
+            Math.cos(angle) * (position.y - this.center.y) +
+            this.center.y;
 
-        return new Vector2(rotatedX + this.center.x, rotatedY + this.center.y);
+        return new Vector2(rotatedX, rotatedY);
     }
 }
