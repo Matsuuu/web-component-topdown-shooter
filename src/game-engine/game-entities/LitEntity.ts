@@ -17,7 +17,6 @@ export abstract class LitEntity extends LitElement implements GameEntity {
 
     constructor() {
         super();
-        setTimeout(() => {}, 0);
         this.waitForGameWorldToInitialize();
     }
 
@@ -32,7 +31,7 @@ export abstract class LitEntity extends LitElement implements GameEntity {
     tick(): void {
         if (!this.position.equals(this.lastPosition)) {
             // Only reset collider if movement has been done
-            this.collider = null;
+            this.resetCollider();
         }
         this.lastPosition = this.position.copy();
     }
@@ -64,5 +63,12 @@ export abstract class LitEntity extends LitElement implements GameEntity {
             );
         }
         return this.collider;
+    }
+
+    /**
+     * Nulls the collider, so it will be re-calculated next game tick.
+     * */
+    resetCollider(): void {
+        this.collider = null;
     }
 }

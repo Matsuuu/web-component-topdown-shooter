@@ -7,7 +7,7 @@ import VectorMath from '../../game-engine/math/VectorMath';
 @customElement('shooter-enemy')
 export default class ShooterEnemy extends Enemy {
     @property({ type: Number })
-    rotation: number;
+    rotation: number = 0;
     static get styles(): Array<CSSResult> {
         return [
             normalShadow,
@@ -36,12 +36,18 @@ export default class ShooterEnemy extends Enemy {
 
     tick(): void {
         super.tick();
-        this.lookTowardsPlayer();
+        // TODO: Changing enemy rotation to ~65+ breaks collision.
+        // No idea what is going on her but should be looked into
+        //this.lookTowardsPlayer();
     }
 
     lookTowardsPlayer(): void {
+        const oldRotation: number = this.rotation;
         this.rotation = VectorMath.lookTowards(this.player.position, this.position);
-        this.style.transform = `translate(${this.position.x}px, ${this.position.y}px) rotate(${this.rotation}deg)`;
+        if (this.rotation !== oldRotation) {
+            this.style.transform = `translate(${this.position.x}px, ${this.position.y}px) rotate(${this.rotation}deg)`;
+            //this.resetCollider();
+        }
     }
 
     render(): TemplateResult {
