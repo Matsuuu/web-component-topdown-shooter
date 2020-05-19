@@ -10,13 +10,6 @@ export default class Structure extends StaticEntity {
     protected firstUpdated(_changedProperties: PropertyValues): void {
         super.firstUpdated(_changedProperties);
         this.getCollider();
-        this.addEventListener('click', () => {
-            console.log(new Vector2(this.offsetWidth, this.offsetHeight));
-            this.getCollider().then(collider => console.log(collider));
-            this.rotation += 10;
-            this.collider = null;
-            this.getCollider();
-        });
     }
 
     render(): TemplateResult {

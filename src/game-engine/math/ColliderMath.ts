@@ -25,6 +25,7 @@ export default class ColliderMath {
         const sourceCollider: Collider = await source.getCollider();
         const targetCollider: Collider = await target.getCollider();
 
+        console.log(sourceCollider);
         if (ColliderMath.isColliding(sourceCollider, targetCollider)) {
             const higherX: number = Math.max(sourceCollider.center.x, targetCollider.center.x);
             const higherY: number = Math.max(sourceCollider.center.y, targetCollider.center.y);

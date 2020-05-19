@@ -48,4 +48,8 @@ export class Vector2 {
         this.y *= multiplier;
         return this;
     }
+
+    static from(coords: { x: number; y: number }): Vector2 {
+        return new Vector2(coords.x, coords.y);
+    }
 }

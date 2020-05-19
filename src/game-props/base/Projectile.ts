@@ -6,8 +6,17 @@ import Collider from '../../game-engine/game-object-types/Collider';
 import WaitUtil from '../../game-engine/apis/wait/WaitUtil';
 import Calculator from '../../game-engine/apis/calculation/Calculator';
 
+interface ColliderPositionTransformation {
+    topLeft: Vector2;
+    topRight: Vector2;
+    bottomLeft: Vector2;
+    bottomRight: Vector2;
+    center: Vector2;
+}
+
 export default class Projectile extends LitEntity {
     collider: Collider;
+    colliderPositionTransformation: ColliderPositionTransformation;
     @property({ type: Number })
     movementSpeed: number;
     @property({ type: Number })
@@ -85,9 +94,18 @@ export default class Projectile extends LitEntity {
         return this.collider;
     }
 
-    getNextPositionCollider(): Promise<Collider> {
+    async getNextPositionCollider(): Promise<Collider> {
+        if (this.colliderPositionTransformation) {
+            const coll: Collider = this.collider;
+            coll.topLeft = Vector2.from(coll.topLeft).reduce(this.colliderPositionTransformation.topLeft);
+            coll.topRight = Vector2.from(coll.topRight).reduce(this.colliderPositionTransformation.topRight);
+            coll.bottomRight = Vector2.from(coll.bottomRight).reduce(this.colliderPositionTransformation.bottomRight);
+            coll.bottomLeft = Vector2.from(coll.bottomLeft).reduce(this.colliderPositionTransformation.bottomLeft);
+            return coll;
+        }
+
         const size: Vector2 = new Vector2(this.clientWidth, this.clientHeight);
-        return window.Calculator.calculateNextColliderPosition(
+        const collider: Collider = await window.Calculator.calculateNextColliderPosition(
             this.position,
             this.heading,
             this.movementSpeed,
@@ -96,6 +114,29 @@ export default class Projectile extends LitEntity {
             this.lifeTimeElapsed,
             this.entityId,
         );
+        // The collider calculations are a bit shaky on the first ticks of lifetime
+        // so let's take the reading at tick 3+
+        // TODO: Maybe make this less wonky? :D
+        if (this.lifeTimeElapsed > 2) {
+            /*
+             * After the collision calculations have stabilized, we save the offset on every tick the colldiers
+             * have, and apply it to the collider manually instead of calculating all of the collider
+             * points with advanced math.
+             * This should be an optimization, but we'll see.
+             *
+             * Might fuck around and offload this to workers later
+             *
+             *
+             * */
+            this.colliderPositionTransformation = {
+                topLeft: Vector2.from(this.collider.topLeft).reduce(collider.topLeft),
+                topRight: Vector2.from(this.collider.topRight).reduce(collider.topRight),
+                bottomRight: Vector2.from(this.collider.bottomRight).reduce(collider.bottomRight),
+                bottomLeft: Vector2.from(this.collider.bottomLeft).reduce(collider.bottomLeft),
+                center: Vector2.from(this.collider.center).reduce(collider.center),
+            } as ColliderPositionTransformation;
+        }
+        return collider;
     }
 
     async checkCollisionWithStaticEntities(): Promise<void> {
